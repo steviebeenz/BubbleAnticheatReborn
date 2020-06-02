@@ -3,8 +3,6 @@ Thanks for Visiting bubble!
 
 Scaffold causes a ton of lag, so its seperated. Only add scaffold if you need it or have a powerful cpu or low amounts of players.
 
-If you have a minehut server or a 1.8.x to 1.15.x server use "bubble.sk", if you have a 1.8.9 server use "bubble189.sk"!
-
 If you find any errors please make sure to open an issue
 
 ## **IMPORTANT // ERROR FIXES**
