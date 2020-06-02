@@ -2,7 +2,7 @@
 
 #ADDONS: SkQuery, Skellett
 
-#DISCORD: https://discord.gg/6RFZYxt
+#Github: https://github.com/steviebeenz/bubbleac
 
 options:
   #Skript
@@ -249,8 +249,8 @@ command /bubble [<text>] [<offline player>] [<text>]:
       send " "
       send "            &cVersion: &7{@VersionStatus} &7{@Version}"
       send "            &cStatus: &7{@Stable}"
-      send "            &cDeveloper: &7dnadany"
-      send "            &cDiscord: &7<link:https://discord.gg/6RFZYxt>Click me!<reset>"
+      send "            &cDeveloper: &7Steviebeenz"
+      send "            &cGithub: &7<link:https://github.com/steviebeenz/bubbleac>Click me!<reset>"
       send " "
       send "    &8-=-=-=-=-=&7[{@Name}&7]&8=-=-=-=-=-"
       send " "
