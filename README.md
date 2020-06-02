@@ -1,4 +1,4 @@
-# bubbleac
+# Bubble Anticheat REBORN
 Thanks for Visiting bubble!
 
 Scaffold causes a ton of lag, so its seperated. Only add scaffold if you need it or have a powerful cpu or low amounts of players.
