@@ -14,15 +14,11 @@ Make sure you have read [the Download Page](https://www.spigotmc.org/resources/b
 ### **ERROR Fixes:**
 
 ### Error: Can't understand ban player... 
-1) open bubble.sk
-2) go to line 60
-3) set BanCommand to:
-console command "tempban %loop-player% {@BanTime} %{Bubble.Prefix}% &8| &8%{%loop-player's uuid%.bubble.cheat::*}% &8| %{_display}%"
+1) click issues
+2) create one
 
 ### Error: Indentation Errors
-1) open bubble.sk
-2) go to line of error
-3) remove or add spaces (2 space = 1 tab)
-4) contact a developer or staff on discord
+1) click issues
+2) open one
 
 If there are other errors please send them to us in an issue. 
