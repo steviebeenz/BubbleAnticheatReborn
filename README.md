@@ -11,7 +11,7 @@ If you find any errors please make sure to open an issue
 
 Make sure you have read [the Download Page](https://www.spigotmc.org/resources/bubble-anticheat-reborn.79600/)
 
-### **ERROR Fixes:
+### **ERROR Fixes:**
 
 ### Error: Can't understand ban player... 
 1) open bubble.sk
