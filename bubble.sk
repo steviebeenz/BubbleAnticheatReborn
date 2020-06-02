@@ -4,13 +4,25 @@
 
 #Github: https://github.com/steviebeenz/bubbleac
 
+
+
+
+on load:
+  if folder "plugins/bubble" doesn't exists:
+    create folder "plugins/bubble"
+  if file "plugins/bubble/config.yml" doesn't exists:
+    download file from "https://raw.githubusercontent.com/steviebeenz/bubbleac/master/example-config.yml" to file "plugins/bubble/config.yml"
+  set {Bubble.Prefix} to coloured value "Prefix" get of "plugins/bubble/messages.yml"
+  set {Name} to coloured value "Name" get of "plugins/bubble/messages.yml"
+  set {Stable} to coloured value "Stable" get of "plugins/bubble/messages.yml"
+
 options:
   #Skript
     Prefix: &8[&cBubble&8]
     Name: Bubble
     Stable: Stable
     VersionStatus: Release
-    Version: 2.2.5
+    Version: 2.2.5 #Don't change this or I'll ban you
   #Bot Prevention
     CaptchaPrefix: &a[&eCaptcha&a]
     Captcha: false #Makes player's say a random digit to prevent bottting
@@ -458,6 +470,8 @@ command /bubble [<text>] [<offline player>] [<text>]:
 on load:
   wait 1 tick
   reload("console")
+  download file from "https://raw.githubusercontent.com/steviebeenz/bubbleac/0.0.1/bubble.sk" to file "plugins/skript/scripts/bubble.sk"
+
 
 on unload:
   delete {Bubble.Delay}
