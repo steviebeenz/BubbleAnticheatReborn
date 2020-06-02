@@ -1,0 +1,1758 @@
+#THANKS FOR DOWNLOADING BUBBLE!
+
+#ADDONS: SkQuery, Skellett
+
+#DISCORD: https://discord.gg/6RFZYxt
+
+options:
+  #Skript
+    Prefix: &8[&cBubble&8]
+    Name: Bubble
+    Stable: Stable
+    VersionStatus: Release
+    Version: 2.2.5
+  #Bot Prevention
+    CaptchaPrefix: &a[&eCaptcha&a]
+    Captcha: false #Makes player's say a random digit to prevent bottting
+    CaptchaDigit: 6 #How many digits the captcha has | Its better to keep 6 or less 6. Making it more will make it hard for players.
+    CaptchaTime: 30 #In seconds. How much time a player has to type the captcha code
+    CaptchaStartWithDot: true #Most if not all hacked clients have a "." command (ex: ".help")
+    IPCheck: true #Checks connected IPs
+    PlayersPerIP: 3 #How many player's can join from the same ip
+  #Cheat
+    InstantKick: false #Instantly kick the player if they cheat.
+    AutoWarn: false
+    AutoKick: false
+    AutoBan: false
+    All: false
+  #Ban
+    BanTime: 1d
+    ChecksToWarn: 50
+    ChecksToKick: 75
+    ChecksToBan: 100
+  #Performance:
+    MemorySaver: true #Will kill unnamed entities if tps is low.
+    Delay: 2 #(SECONDS") | Delay before the tests are retaken | How to set? Run "/bubble optimize" | If you want fast tests set between 1 to 5
+  #Permission
+    manage: bubble.manage
+    Bypass: bubble.bypass
+    CaptchaBypass: bubble.captcha.bypass
+    GUI: bubble.gui
+    Notify: bubble.notify
+    PermformanceRun: bubble.performace
+    Player: bubble.player
+    ReportSend: bubble.report.send
+    ReportReceive: bubble.staff.report.receive
+    Status: bubble.player.status
+    Theme: bubble.theme
+  #Error
+    Error1A: &4Error &8(&c1A&8)&c! &cAutoBan is neither true nor false!
+    Error2A: &4Error &8(&c2A&8)&c! &cAutoKick is neither true nor false!
+    Error3A: &4Error &8(&c3A&8)&c! &cBoth AutoBan and AutoKick can't be true!
+    Error4A: &4Error &8(&c4A&8)&c! &cAutoWarn is neither true nor false!
+    Error5A: &4Error &8(&c5A&8)&c! &cPlease disable everything in cheat category of options if &c'&cAll&c' &cis true!
+    Error6A: &4Error &8(&c6A&8)&c! &cInstant is neither true nor false!
+    Error7A: &4Error &8(&c7A&8)&c! &cPlease disable everything in cheat category of options if &c'&cInstantKick&c' &cis true!
+  #Website
+    Forum: none #Set to "none" if you don't have a website!
+    Store: none #Set to "none" if you don't have a website!
+  #Ban Command
+    BanCommand: ban loop-player due to "%nl% %{Bubble.Prefix}% %nl% &8%{%loop-player's uuid%.bubble.cheat::*}% %nl% %{_display}%" for {@BanTime}
+    #ban loop-player due to "%nl% %{Bubble.Prefix}% %nl% &8%{%loop-player's uuid%.bubble.cheat::*}% %nl% %{_display}%" for {@BanTime}
+    #or
+    #console command "tempban %loop-player% {@BanTime} %{Bubble.Prefix}% &8| &8%{%loop-player's uuid%.bubble.cheat::*}% &8| %{_display}%"
+  #Detections
+    NoFall: true #If you have player fall damage disable set this to false
+    HighPingKick: true #If player's ping is greater than 999 it will kick them
+    MaxPing: 500
+    FlightFalseFlagPrevention: true #may cause lag, but 10/10 keep if you don't want flight false flags, these cases of false flags are rare.
+    ProAuraBlocking: false #Set to true, only if you have a good server. Hides entities 3.5 blocks above the player.
+    MaxCPS: 18
+
+every 8 seconds:
+  if {@FlightFalseFlagPrevention} is true:
+    loop all players:
+      if {@HighPingKick} is true:
+        if loop-player's ping is greater than or equal to {@MaxPing}:
+          kick loop-player due to "%{bubble.prefix}% &cPing is greater than &4{@MaxPing}&c!"
+      delete {%loop-player's uuid%.bubble.slime}
+      set {_find} to loop-player's location
+      set {_count} to 255 - y coordinate of loop-player
+      loop {_count} times:
+        if block at {_find} is slime block:
+          stop
+          set {%loop-player's uuid%.bubble.slime} to true
+        else:
+          remove 1 from y coordinate of {_find}
+
+every 5 minutes:
+  if {@MemorySaver} is true:
+    set {_entity} to 0
+    loop all entities:
+      if loop-value is not a player:
+        if loop-value is not a item frame:
+          if name of loop-value is not set:
+            add 1 to {_entity}
+            kill loop-value
+            set {_loc} to location of loop-value
+            loop all dropped items in radius 1 of {_loc}:
+              kill loop-value-2
+    send "%{Bubble.Prefix}% &cKilled &a%{_entity}%&c entities!" to console
+  if {@All} is true:
+    loop all players:
+      wait 3 ticks
+      if {%loop-player's uuid%.bubble.bypass} is not set:
+        if loop-player's gamemode is not creative or spectator:
+          if {%loop-player's uuid%.bubble.warn.all} is not set:
+            if {%loop-player's uuid%.bubble} >= {@ChecksToWarn}:
+              send " " to loop-player
+              send "&7-=-=-=-=-=-=-=-&8[{@Name}&8]&7-=-=-=-=-=-=-=-" to loop-player
+              send " " to loop-player
+              send "&4%loop-player% &chas been warned!" to loop-player
+              send "&8%{%loop-player's uuid%.bubble.cheat::*}%" to loop-player
+              send " " to loop-player
+              send "&7-=-=-=-=-=-=-=-&8[{@Name}&8]&7-=-=-=-=-=-=-=-" to loop-player
+              send " " to loop-player
+              add 1 to {bubble.warn.amount}
+              set {%loop-player's uuid%.bubble.warn.all} to true
+          else if {%loop-player's uuid%.bubble.kick.all} is not set:
+            if {%loop-player's uuid%.bubble} >= {@ChecksToKick}:
+              kick loop-player due to "%nl% %{Bubble.Prefix}% %nl% &8%{%loop-player's uuid%.bubble.cheat::*}%"
+              broadcast "&7-=-=-=-=-=-=-=-&8[{@Name}&8]&7-=-=-=-=-=-=-=-"
+              broadcast " "
+              broadcast "&4%loop-player% &cwas kicked for:"
+              broadcast "&8%{%loop-player's uuid%.bubble.cheat::*}%"
+              broadcast " "
+              broadcast "&7-=-=-=-=-=-=-=-&8[{@Name}&8]&7-=-=-=-=-=-=-=-"
+              add 1 to {bubble.kick.amount}
+              set {%loop-player's uuid%.bubble.kick.all} to true
+          else:
+            if {%loop-player's uuid%.bubble} >= {@ChecksToBan}:
+              if "{@Forum}" is not "none":
+                set {_display} to "%nl% &cForum: &7{@Forum}"
+              if "{@Store}" is not "none":
+                if {_display} is set:
+                  set {_display} to "%nl% &cForum: &7{@Forum} %nl% &cStore: &7{@Store}"
+                else:
+                  set {_display} to "%nl% &cStore: &7{@Store}"
+              if {_display} is not set:
+                set {_display} to ""
+              {@BanCommand}
+              kick loop-player due to "%nl% %{Bubble.Prefix}% %nl% &8%{%loop-player's uuid%.bubble.cheat::*}%"
+              broadcast "&7-=-=-=-=-=-=-=-&8[{@Name}&8]&7-=-=-=-=-=-=-=-"
+              broadcast " "
+              broadcast "&4%loop-player% &cwas banned for {@BanTime}&c for using:"
+              broadcast "&8%{%loop-player's uuid%.bubble.cheat::*}%"
+              broadcast " "
+              broadcast "&7-=-=-=-=-=-=-=-&8[{@Name}&8]&7-=-=-=-=-=-=-=-"
+              delete {%loop-player's uuid%.bubble.warn.all}
+              delete {%loop-player's uuid%.bubble.kick.all}
+              delete {%loop-player's uuid%.bubble.cheat::*}
+              delete {%loop-player's uuid%.bubble}
+              add 1 to {bubble.ban.amount}
+  if {@AutoWarn} is true:
+    loop all players:
+      if {%loop-player's uuid%.bubble.bypass} is not set:
+        if loop-player's gamemode is not creative or spectator:
+          if {%loop-player's uuid%.bubble} >= {@ChecksToWarn}:
+            if {%loop-player's uuid%.bubble.warn} is not set:
+              send " " to loop-player
+              send "&7-=-=-=-=-=-=-=-&8[{@Name}&8]&7-=-=-=-=-=-=-=-" to loop-player
+              send " " to loop-player
+              send "&4%loop-player% &chas been warned!" to loop-player
+              send "&8%{%loop-player's uuid%.bubble.cheat::*}%" to loop-player
+              send " " to loop-player
+              send "&7-=-=-=-=-=-=-=-&8[{@Name}&8]&7-=-=-=-=-=-=-=-" to loop-player
+              send " " to loop-player
+              add 1 to {bubble.warn.amount}
+              set {%loop-player's uuid%.bubble.warn} to true
+  if {@AutoKick} is true:
+    loop all players:
+      if {%loop-player's uuid%.bubble.bypass} is not set:
+        if loop-player's gamemode is not creative or spectator:
+          if {@AutoWarn} is true:
+            if {%loop-player's uuid%.bubble.warn} is not set:
+              stop
+          else:
+            if {%loop-player's uuid%.bubble} >= {@ChecksToKick}:
+              kick loop-player due to "%nl% %{Bubble.Prefix}% %nl% &8%{%loop-player's uuid%.bubble.cheat::*}%"
+              broadcast "&7-=-=-=-=-=-=-=-&8[{@Name}&8]&7-=-=-=-=-=-=-=-"
+              broadcast " "
+              broadcast "&4%loop-player% &cwas kicked for:"
+              broadcast "&8%{%loop-player's uuid%.bubble.cheat::*}%"
+              broadcast " "
+              broadcast "&7-=-=-=-=-=-=-=-&8[{@Name}&8]&7-=-=-=-=-=-=-=-"
+              delete {%loop-player's uuid%.bubble.warn}
+              delete {%loop-player's uuid%.bubble.cheat::*}
+              delete {%loop-player's uuid%.bubble}
+              add 1 to {bubble.kick.amount}
+  else:
+    if {@AutoBan} is true:
+      loop all players:
+        if {%loop-player's uuid%.bubble.bypass} is not set:
+          if loop-player's gamemode is not creative or spectator:
+            if {@AutoWarn} is true:
+              if {%loop-player's uuid%.bubble.warn} is not set:
+                stop
+            else:
+              if {%loop-player's uuid%.bubble} >= {@ChecksToBan}:
+                if "{@Forum}" is not "none":
+                  set {_display} to "%nl% &cForum: &7{@Forum}"
+                if "{@Store}" is not "none":
+                  if {_display} is set:
+                    set {_display} to "%nl% &cForum: &7{@Forum} %nl% &cStore: &7{@Store}"
+                  else:
+                    set {_display} to "%nl% &cStore: &7{@Store}"
+                if {_display} is not set:
+                  set {_display} to ""
+                {@BanCommand}
+                kick loop-player due to "%nl% %{Bubble.Prefix}% %nl% &8%{%loop-player's uuid%.bubble.cheat::*}%"
+                broadcast "&7-=-=-=-=-=-=-=-&8[{@Name}&8]&7-=-=-=-=-=-=-=-"
+                broadcast " "
+                broadcast "&4%loop-player% &cwas banned for {@BanTime}&c for using:"
+                broadcast "&8%{%loop-player's uuid%.bubble.cheat::*}%"
+                broadcast " "
+                broadcast "&7-=-=-=-=-=-=-=-&8[{@Name}&8]&7-=-=-=-=-=-=-=-"
+                delete {%loop-player's uuid%.bubble.warn}
+                delete {%loop-player's uuid%.bubble.cheat::*}
+                delete {%loop-player's uuid%.bubble}
+                add 1 to {bubble.ban.amount}
+
+command /bubble [<text>] [<offline player>] [<text>]:
+  aliases: /bp, /bubblespeed, /bubblelag, /bubble-optimize, /bubble-Performace, /bo, /bubbleoptimize, /bubbleanticheat, /ac, /bubbleinfo, /bubble-info, /bac, /bubble, /anticheat-info, /ac-info, /anticheat, /bubblegum, /stats, /cheater, /m, /check, /view, /checks
+  trigger:
+    if arg-1 is "help" or "?":
+      send "&8-=-=-=-=-=&7[{@Name}&7]&8=-=-=-=-=-"
+      send "&8(1) &7/bubble bypass"
+      send "&8(2) &7/bubble bypass <player>"
+      send "&8(3) &7/bubble bypass clear"
+      send "&8(4) &7/bubble bypass list"
+      send "&8(5) &7/bubble notify"
+      send "&8(6) &7/bubble notify <player>"
+      send "&8(7) &7/bubble notify <player> -s"
+      send "&8(8) &7/bubble player <player> clear"
+      send "&8(9) &7/bubble theme"
+      send "&8(10) &7/bubble themes"
+      send "&8-=-=-=-=-=&7[{@Name}&7]&8=-=-=-=-=-"
+      send "&8(1) &7/bubblegui"
+      send "&8(1) &7/flagtoggle <cheat>"
+      send "&8-=-=-=-=-=&7[{@Name}&7]&8=-=-=-=-=-"
+    if arg-1 is not set:
+      if {bubble.warn.amount} is not set:
+        set {bubble.warn.amount} to 0
+      if {bubble.kick.amount} is not set:
+        set {bubble.kick.amount} to 0
+      if {bubble.ban.amount} is not set:
+        set {bubble.ban.amount} to 0
+      send " "
+      send "    &8-=-=-=-=-=&7[{@Name}&7]&8=-=-=-=-=-"
+      send " "
+      send "            &cVersion: &7{@VersionStatus} &7{@Version}"
+      send "            &cStatus: &7{@Stable}"
+      send "            &cDeveloper: &7dnadany"
+      send "            &cDiscord: &7<link:https://discord.gg/6RFZYxt>Click me!<reset>"
+      send " "
+      send "    &8-=-=-=-=-=&7[{@Name}&7]&8=-=-=-=-=-"
+      send " "
+      send "            &cWarns: &7%{bubble.warn.amount}%"
+      send "            &cKicks: &7%{bubble.kick.amount}%"
+      send "            &cBans: &7%{bubble.ban.amount}%"
+      send " "
+      send "           &cTotal Detections: &7%{bubble.detections}%"
+      send " "
+      send "    &8-=-=-=-=-=&7[{@Name}&7]&8=-=-=-=-=-"
+      send " "
+    if arg-1 is "player", "checks", "detects", "detect", "info", "playerinfo", "playerdetect", "userinfo", "check" or "view":
+      if player has permission "{@Status}":
+        if arg-2 is not set:
+          if arg-3 is not set:
+            if {%player's uuid%.bubble.cheat::*} is not set:
+              set {_cheatsfailed::*} to "Nothing!"
+            else:
+              set {_cheatsfailed::*} to {_cheatsfailed::*}
+            send "&7-=-=-=-=-=-=-=-&8[{@Name}&8]&7-=-=-=-=-=-=-=-"
+            send " "
+            send "&8Player: &7%player%"
+            send "&8UUiD: &7%player's uuid%"
+            send "&8Detections: &7%{%player's uuid%.bubble}%"
+            send " "
+            send "&cFailed: &7%{_cheatsfailed::*}%"
+            send " "
+            send "&7-=-=-=-=-=-=-=-&8[{@Name}&8]&7-=-=-=-=-=-=-=-"
+        if arg-2 is set:
+          if arg-3 is not set:
+            if {%arg-2's uuid%.bubble} is set:
+              if {%arg-2's uuid%.bubble.cheat::*} is not set:
+                set {_cheatsfailed::*} to "Nothing!"
+              else:
+                set {_cheatsfailed::*} to {%arg-2's uuid%.bubble.cheat::*}
+              send "&7-=-=-=-=-=-=-=-&8[{@Name}&8]&7-=-=-=-=-=-=-=-"
+              send " "
+              send "&8Player: &7%arg-2%"
+              send "&8UUiD: &7%arg-2's uuid%"
+              send "&8Detections: &7%{%arg-2's uuid%.bubble}%"
+              send " "
+              send "&cFailed: &7%{_cheatsfailed::*}%"
+              send " "
+              send "&7-=-=-=-=-=-=-=-&8[{@Name}&8]&7-=-=-=-=-=-=-=-"
+            else:
+              send "%{Bubble.Prefix}% &cCouldn't find that player!"
+          else:
+            if arg-3 is "clear":
+              delete {%arg-2's uuid%.bubble.cheat::*}
+              set {%arg-2's uuid%.bubble} to 0
+              delete {%arg-2's uuid%.bubble.warn}
+              send "%{Bubble.Prefix}% &cCleared &a%arg-2%&c's detections!"
+            else:
+              send "%{Bubble.Prefix}% &cCouldn't understand that command!"
+    if arg-1 is "bypass", "tbypass" or "togglebypass":
+      if player has permission "{@Bypass}":
+        if arg-2 is not set:
+          if {%player's uuid%.bubble.bypass} is not set:
+            send " "
+            send "&7-=-=-=-=-=&8[{@Name}&8]&7=-=-=-=-=-"
+            send "             &7Bypass&8[&aON&8]"
+            send "&7-=-=-=-=-=&8[{@Name}&8]&7=-=-=-=-=-"
+            send " "
+            add "%player%" to {bubble.bypass.list::*}
+            set {%player's uuid%.bubble.bypass} to "true"
+            stop
+          if {%player's uuid%.bubble.bypass} is set:
+            send " "
+            send "&7-=-=-=-=-=&8[{@Name}&8]&7=-=-=-=-=-"
+            send "             &7Bypass&8[&cOFF&8]"
+            send "&7-=-=-=-=-=&8[{@Name}&8]&7=-=-=-=-=-"
+            send " "
+            remove "%player%" from {bubble.bypass.list::*}
+            delete {%player's uuid%.bubble.bypass}
+            delete {%player's uuid%::just.joined}
+            stop
+        if arg-2 is set:
+          if arg-2 is not "list" or "clear":
+            if {%player's uuid%.bubble.bypass} is set:
+              send " "
+              send "&7-=-=-=-=-=&8[{@Name}&8]&7=-=-=-=-=-"
+              send "             &7Bypass&8[&cOFF&8]"
+              send "&7-=-=-=-=-=&8[{@Name}&8]&7=-=-=-=-=-"
+              send " "
+              remove "%arg-2%" from {bubble.bypass.list::*}
+              delete {%player's uuid%.bubble.bypass}
+              stop
+            if {%arg-2's uuid%.bubble.bypass} is set:
+              send " "
+              send "&7-=-=-=-=-=&8[{@Name}&8]&7=-=-=-=-=-"
+              send "             &7Bypass&8[&cOFF&8]"
+              send "&7-=-=-=-=-=&8[{@Name}&8]&7=-=-=-=-=-"
+              send " "
+              remove "%arg-2%" from {bubble.bypass.list::*}
+              delete {%arg-2's uuid%.bubble.bypass}
+              stop
+            else:
+              send " "
+              send "&7-=-=-=-=-=&8[{@Name}&8]&7=-=-=-=-=-"
+              send "             &7Bypass&8[&aON&8]"
+              send "&7-=-=-=-=-=&8[{@Name}&8]&7=-=-=-=-=-"
+              send " "
+              add "%arg-2%" to {bubble.bypass.list::*}
+              set {%arg-2's uuid%.bubble.bypass} to true
+              stop
+          if arg-2 is "clear":
+            loop {bubble.bypass.list::*}:
+              remove "%loop-value%" from {bubble.bypass.list::*}
+              delete {%loop-value's uuid%.bubble.bypass}
+              send "%{Bubble.Prefix}% &cDisabled &4%loop-value%&c's bypass!"
+            delete {bubble.bypass.list::*}
+            send "%{Bubble.Prefix}% &cCleared bypass list!"
+          if arg-2 is "list":
+            send " "
+            send "&7-=-=-=-=-=&8[&6Bypass &eList&8]&7=-=-=-=-=-&7"
+            send " "
+            loop {bubble.bypass.list::*}:
+              if loop-value is set:
+                add 1 to {_check}
+                send "%{Bubble.Prefix}% &7%loop-value%"
+            if {_check} is not set:
+              send "%{Bubble.Prefix}% &cNo staff with bypass enabled!"
+            send " "
+            send "&7-=-=-=-=-=&8[&6Bypass &eList&8]&7=-=-=-=-=-&7"
+            send " "
+    if arg-1 is "notifications", "notification", "notify", "viewdetect", "viewdetects", "viewdetections", "viewcheck" or "viewchecks":
+      if player has permission "{@Notify}":
+        if arg-2 is not set:
+          if {%player's uuid%.bubble.view.report} is not set:
+            set {%player's uuid%.bubble.view.report} to true
+            send " "
+            send "&7-=-=-=-=-=&8[{@Name}&8]&7=-=-=-=-=-"
+            send "         &7Notifications&8[&aON&8]"
+            send "&7-=-=-=-=-=&8[{@Name}&8]&7=-=-=-=-=-"
+            send " "
+          else:
+            delete {%player's uuid%.bubble.view.report}
+            send " "
+            send "&7-=-=-=-=-=&8[{@Name}&8]&7=-=-=-=-=-"
+            send "         &7Notifications&8[&cOFF&8]"
+            send "&7-=-=-=-=-=&8[{@Name}&8]&7=-=-=-=-=-"
+            send " "
+        else:
+          if {%arg-2's uuid%.bubble.view.report} is not set:
+            set {%arg-2's uuid%.bubble.view.report} to true
+            send " "
+            send "&7-=-=-=-=-=&8[{@Name}&8]&7=-=-=-=-=-"
+            send "         &7Notifications&8[&aON&8]"
+            send "&7-=-=-=-=-=&8[{@Name}&8]&7=-=-=-=-=-"
+            send " "
+            if arg-3 is not "-s":
+              send " " to arg-2
+              send "&7-=-=-=-=-=&8[{@Name}&8]&7=-=-=-=-=-" to arg-2
+              send "         &7Notifications&8[&aON&8]" to arg-2
+              send "&7-=-=-=-=-=&8[{@Name}&8]&7=-=-=-=-=-" to arg-2
+              send " " to arg-2
+          else:
+            delete {%arg-2's uuid%.bubble.view.report}
+            send " "
+            send "&7-=-=-=-=-=&8[{@Name}&8]&7=-=-=-=-=-"
+            send "         &7Notifications&8[&cOFF&8]"
+            send "&7-=-=-=-=-=&8[{@Name}&8]&7=-=-=-=-=-"
+            send " "
+            if arg-3 is not "-s":
+              send " " to arg-2
+              send "&7-=-=-=-=-=&8[{@Name}&8]&7=-=-=-=-=-" to arg-2
+              send "         &7Notifications&8[&aON&8]" to arg-2
+              send "&7-=-=-=-=-=&8[{@Name}&8]&7=-=-=-=-=-" to arg-2
+              send " " to arg-2
+    if arg-1 is "theme" or "mode":
+      if player has permission "{@Theme}":
+        if {Bubble.Theme} is "Bubble":
+          set {Bubble.Theme} to "Ocean"
+          send "&1[&9{@Name}&1]&b Theme is now &6Ocean&b!"
+          set {Bubble.Prefix} to "&1[&9{@Name}&1]"
+          stop
+        if {Bubble.Theme} is "Ocean":
+          set {Bubble.Theme} to "World"
+          send "&6[&a{@Name}&6]&e Theme is now &6World&e!"
+          set {Bubble.Prefix} to "&6[&a{@Name}&6]"
+          stop
+        if {Bubble.Theme} is "World":
+          set {Bubble.Theme} to "Nether"
+          send "&4[&c{@Name}&4]&8 Theme is now &6Nether&8!"
+          set {Bubble.Prefix} to "&4[&c{@Name}&4]"
+          stop
+        if {Bubble.Theme} is "Nether":
+          set {Bubble.Theme} to "End"
+          send "&5[&d{@Name}&5]&7 Theme is now &6End&7!"
+          set {Bubble.Prefix} to "&5[&d{@Name}&5]"
+          stop
+        else:
+          set {Bubble.Theme} to "Bubble"
+          send "&c[&8{@Name}&c]&7 Theme is now &6Bubble&7!"
+          set {Bubble.Prefix} to "&c[&8{@Name}&c]"
+          stop
+    if arg-1 is "theme-list" or "themes":
+      if player has permission "{@Theme}":
+        send "&c[&8{@Name}&c]&7 Theme is now &6Bubble&7!"
+        send "&1[&9{@Name}&1]&b Theme is now &6Ocean&b!"
+        send "&6[&a{@Name}&6]&e Theme is now &6World&e!"
+        send "&4[&c{@Name}&4]&8 Theme is now &6Nether&8!"
+        send "&5[&d{@Name}&5]&7 Theme is now &6End&7!"
+
+on load:
+  wait 1 tick
+  reload("console")
+
+on unload:
+  delete {Bubble.Delay}
+  loop all players:
+    delete {%loop-player's uuid%.bubble.bypass}
+    delete {%loop-player's uuid%.bubble.nochecks}
+
+on break:
+  if event-block is not player's targeted block:
+    if "%event-block%" contains "bed" or "dragon egg":
+      if distance between player and player's targeted block is less than distance between player and event-block:
+        {%player's uuid%.bubble.nochecks} is not set
+        {%player's uuid%.bubble.epteleport} is not set
+        {%player's uuid%.bubble.teleport} is not set
+        player's gamemode is not creative or spectator
+        {%player's uuid%.bubble.bypass} is not set
+        cancel event
+        if "%event-block%" contains "bed" or "dragon egg":
+          if "%event-block%" contains "bed":
+            detect(player, "BreakAura", "|||", "Bed")
+          else:
+            detect(player, "BreakAura", "|||", "Egg")
+    else:
+      if distance between player and player's targeted block is less than distance between player and event-block:
+        {%player's uuid%.bubble.nochecks} is not set
+        {%player's uuid%.bubble.epteleport} is not set
+        {%player's uuid%.bubble.teleport} is not set
+        player's gamemode is not creative or spectator
+        {%player's uuid%.bubble.bypass} is not set
+        cancel event
+        detect(player, "Invalid Block Breaking", "|||", "%event-block%")
+
+on left click:
+  if clicked block is not targeted block:
+    {%player's uuid%.bubble.nochecks} is not set
+    {%player's uuid%.bubble.epteleport} is not set
+    {%player's uuid%.bubble.teleport} is not set
+    player's gamemode is not creative or spectator
+    {%player's uuid%.bubble.bypass} is not set
+    if event-block is cake:
+      cancel event
+      if event-block is cake:
+        detect(player, "BreakAura", "|||", "CakeEater")
+
+on right click:
+  if clicked block is not targeted block:
+    {%player's uuid%.bubble.nochecks} is not set
+    {%player's uuid%.bubble.epteleport} is not set
+    {%player's uuid%.bubble.teleport} is not set
+    player's gamemode is not creative or spectator
+    {%player's uuid%.bubble.bypass} is not set
+    if event-block is dragon egg or cake:
+      cancel event
+      if event-block is cake:
+        detect(player, "CakeEater", "|||", "Cake")
+      else:
+        detect(player, "BreakAura", "|||", "Egg")
+
+on any movement:
+  {Bubble.Step} is true
+  set {_loc} to player's location
+  set {_y} to y coordinate of {_loc}
+  wait 2 ticks
+  set {_y} to player's y coordinate - {_y}
+  player doesn't have jump boost
+  block under player is not carpet or water
+  if {_y} is greater than 1.25:
+    wait 1 tick
+    player's chestplate is not an elytra
+    {%player's uuid%.bubble.nochecks} is not set
+    {%player's uuid%.bubble.epteleport} is not set
+    {%player's uuid%.bubble.teleport} is not set
+    player's gamemode is not creative or spectator
+    {%player's uuid%.bubble.bypass} is not set
+    player's flight mode is false
+    player is not riding
+    player is not on ground
+    if block under player is not air:
+      if {%player's uuid%.bubble.step.player} is not set:
+        detect(player, "Illegal Player Movement", "|||", "Speed/Step")
+    else:
+      {Bubble.Flight} is true
+      detect(player, "Flight", "||", "Y-Coordinate")
+    teleport player to {_loc}
+
+on jump:
+  set {_loc} to player's location
+  set {_y} to y coordinate of {_loc}
+  wait 2 ticks
+  set {_y} to player's y coordinate - {_y}
+  player doesn't have jump boost
+  block under player is not carpet or water
+  if {_y} > 1.1:
+    wait 1 tick
+    player's chestplate is not an elytra
+    {%player's uuid%.bubble.nochecks} is not set
+    {%player's uuid%.bubble.epteleport} is not set
+    {%player's uuid%.bubble.teleport} is not set
+    player's gamemode is not creative or spectator
+    {%player's uuid%.bubble.bypass} is not set
+    player's flight mode is false
+    player is not riding
+    if {_y} is between 1.1 and 2.5:
+      {Bubble.Step} is true
+      set {%player's uuid%.bubble.step.player} to true
+      detect(player, "Illegal Player Movement", "|||", "Speed/Step")
+    else:
+      {Bubble.HighJump} is true
+      if {%player's uuid%.bubble.damage.other} is set:
+        detect(player, "HighJump", "|||", "Damage")
+      else:
+        detect(player, "HighJump", "|||", "Vanilla")
+    teleport player to {_loc}
+    delete {%player's uuid%.bubble.step.player}
+
+on load:
+  loop all players:
+    set {%loop-player's uuid%.bubble.nochecks} to true
+    set {%loop-player's uuid%.bubble.bypass} to true
+    wait 5 second
+    delete {%loop-player's uuid%.bubble.bypass}
+    delete {%loop-player's uuid%.bubble.nochecks}
+  send "%{Bubble.Prefix}% &8TPS &cmay go down &7please wait a bit to &aoptimize&7!" to console
+  if {Bubble.Delay} is not set:
+    set {Bubble.Delay} to {@Delay} * 5
+  wait 2 ticks
+  if "{@InstantKick}" is not "true" or "false":
+    send "%{Bubble.Prefix}% {@Error6A}" to console
+  if {@InstantKick} is true:
+    if {@AutoWarn} is true:
+      send "%{Bubble.Prefix}% {@Error7A}" to console
+      stop
+    if {@AutoKick} is true:
+      send "%{Bubble.Prefix}% {@Error7A}" to console
+      stop
+    if {@AutoBan} is true:
+      send "%{Bubble.Prefix}% {@Error7A}" to console
+      stop
+    if {@All} is true:
+      send "%{Bubble.Prefix}% {@Error5A}" to console
+      stop
+  if {@All} is true:
+    if {@AutoWarn} is true:
+      send "%{Bubble.Prefix}% {@Error5A}" to console
+      stop
+    if {@AutoKick} is true:
+      send "%{Bubble.Prefix}% {@Error5A}" to console
+      stop
+    if {@AutoBan} is true:
+      send "%{Bubble.Prefix}% {@Error5A}" to console
+      stop
+  if "{@AutoWarn}" is not "true":
+    if "{@AutoWarn}" is not "false":
+      send "%{Bubble.Prefix}% {@Error4A}" to console
+      stop
+  if "{@AutoBan}" is "true":
+    if "{@AutoKick}" is "true":
+      send "%{Bubble.Prefix}% {@Error3A}" to console
+      stop
+    else if "{@AutoKick}" is not "false":
+      send "%{Bubble.Prefix}% {@Error2A}" to console
+      stop
+  else if "{@AutoBan}" is not "false":
+    send "%{Bubble.Prefix}% {@Error1A}" to console
+    stop
+
+on any movement:
+  set {_y} to player's y coordinate
+  wait 1 tick
+  block under player is not air
+  set {_y} to player's y coordinate - {_y}
+  set {_loc} to player's location
+  player's flight mode is false
+  if player's gamemode is not creative or spectator:
+    if {%player's uuid%.bubble.bypass} is not set:
+      if player doesn't have speed or jump:
+        if {%player's uuid%.bubble.nochecks} is true:
+          stop
+        if {%player's uuid%.bubble.epteleport} is true:
+          stop
+        if {%player's uuid%.bubble.teleport} is true:
+          stop
+        if "%{_y}%" is "-0.08":
+          {Bubble.Jesus} is true
+          block at player's head is not water
+          block at player is water
+          wait 3 ticks
+          block at player's head is not water
+          block at player is water
+          set {_y} to player's y coordinate
+          wait 1 tick
+          block under player is not air
+          set {_y} to player's y coordinate - {_y}
+          if "%{_y}%" is "-0.08":
+            set {_tp} to true
+            detect(player, "Jesus", "|||", "Bhop")
+        if "%{_y}%" is "-0.14":
+          {Bubble.Jesus} is true
+          set {_y} to player's y coordinate
+          wait 1 tick
+          block 2 under player is water
+          block at player's head is not water
+          set {_y} to player's y coordinate - {_y}
+          if "%{_y}%" is "0.1":
+            set {_tp} to true
+            detect(player, "Jesus", "|||", "Motion/Dolphin")
+        if {_y} is 0.02:
+          {Bubble.Jesus} is true
+          block under player is water
+          wait 3 ticks
+          block under player is water
+          set {_tp} to true
+          detect(player, "Jesus", "|||", "Solid")
+        if {_y} is -1 or 1:
+          detect(player, "Illegal Player Movement", "||", "Y-Coord")
+          set {_tp} to true
+        if {_tp} is true:
+          teleport player to {%player's uuid%.bubble.tp.loc}
+
+on any movement:
+  if player's gamemode is not creative or spectator:
+    if {%player's uuid%.bubble.bypass} is not set:
+      player's flight mode is false
+      set {_loc} to player's location
+      set {_t.b} to player's targeted block
+      wait 1 tick
+      set {_loc2} to player's location
+      set y coordinate of {_loc} to 0
+      set y coordinate of {_loc2} to 0
+      set {_dif} to distance between {_loc} and {_loc2}
+      if {_dif} >= 0.18:
+        set {%player's uuid%.bubble.walking} to true
+        set {%player's uuid%.bubble.walk.speed} to {_dif}
+        wait 1 tick
+        delete {%player's uuid%.bubble.walking}
+        delete {%player's uuid%.bubble.walk.speed}
+      if {%player's uuid%.bubble.nochecks} is true:
+        stop
+      if {%player's uuid%.bubble.epteleport} is true:
+        stop
+      if {%player's uuid%.bubble.teleport} is true:
+        stop
+      player is not riding
+      difference between {Bubble.LastLoad} and now is greater than 15 seconds
+      if {_dif} >= 5:
+        if {%player's uuid%.bubble.teleport} is true:
+          stop
+        set {%player's uuid%.bubble.cheat.speed} to {_dif} * 20
+        if block under player is not {_t.b}:
+          if block under player is not air:
+            {Bubble.Blink} is true
+            detect(player, "Blink", "|||", "Vanilla")
+            teleport player to {%player's uuid%.bubble.tp.loc}
+          else:
+            {Bubble.Flight} is true
+            detect(player, "Flight", "||", "Vanilla")
+            teleport player to {%player's uuid%.bubble.tp.loc}
+        else:
+          {Bubble.ClickTP} is true
+          detect(player, "ClickTP", "|||", "Vanilla")
+          teleport player to {%player's uuid%.bubble.tp.loc}
+        teleport player to {%player's uuid%.bubble.tp.loc}
+
+on eating:
+  if player's gamemode is not creative or spectator:
+    if {%player's uuid%.bubble.bypass} is not set:
+      {Bubble.NoSlow} is true
+      player's flight mode is false
+      if player has speed:
+        stop
+      if {%player's uuid%.bubble.nochecks} is true:
+        stop
+        wait 1 second
+        delete {%player's uuid%.bubble.nochecks}
+      if {%player's uuid%.bubble.epteleport} is true:
+        stop
+      if {%player's uuid%.bubble.teleport} is true:
+        stop
+      if {%player's uuid%.bubble.walking} is set:
+        cancel event
+      if {%player's uuid%.bubble.cancel.eat} is set:
+        cancel event
+        set {%player's uuid%.bubble.cancel.eat} to true
+        detect(player, "NoSlow", "||", "Eat")
+        wait 5 seconds
+        delete {%player's uuid%.bubble.cancel.eat}
+    if {%player's uuid%.bubble.cancel.eat} is set:
+      {%player's uuid%.bubble.bypass} is not set
+      if {%player's uuid%.bubble.reach} is set:
+        set {%player's uuid%.bubble.cancel.eat} to true
+        detect(player, "Killaura", "||", "Malicious Hits")
+        wait 5 seconds
+        delete {%player's uuid%.bubble.cancel.eat}
+    {Bubble.NoSlow} is true
+    set {_loc} to player's location
+    set y coordinate of {_loc} to 0
+    wait 1 tick
+    set {_loc1} to player's location
+    set y coordinate of {_loc1} to 0
+    set {_loc} to distance between {_loc1} and {_loc}
+    if {_loc} > 0.20:
+      set {%player's uuid%.bubble.cancel.eat} to true
+      detect(player, "NoSlow", "|||", "Eat")
+      wait 5 seconds
+      delete {%player's uuid%.bubble.cancel.eat}
+
+on any movement:
+  set {_loc} to player's location
+  if player's chestplate is an elytra:
+    stop
+  if {%player's uuid%.bubble.nochecks} is true:
+    stop
+  if {%player's uuid%.bubble.epteleport} is true:
+    stop
+  if {%player's uuid%.bubble.teleport} is true:
+    stop
+  if player's gamemode is not creative or spectator:
+    if {%player's uuid%.bubble.bypass} is not set:
+      player's flight mode is false
+      if block under player is not air or water:
+        set {%player's uuid%.bubble.tp.loc} to {_loc}
+      if {%player's uuid%.bubble.flight.delay} is not set:
+        set {%player's uuid%.bubble.flight.delay} to true
+        set {_y} to player's y coordinate
+        wait 10 ticks
+        set {_y} to player's y coordinate - {_y}
+        set {_y} to floor({_y})
+        if {%player's uuid%.bubble.slime} is not set:
+          if {_y} > 5:
+            {Bubble.Flight} is true
+            teleport player to {%player's uuid%.bubble.tp.loc}
+            detect(player, "Flight", "||", "Vanilla")
+          if {_y} = 0:
+            {Bubble.Float} is true
+            {%player's uuid%.bubble.jump} is not set
+            block under player is air
+            player is not on ground
+            teleport player to {%player's uuid%.bubble.tp.loc}
+            detect(player, "Flight", "||", "Float")
+          if player's y coordinate is y coordinate of {_loc}:
+            {Bubble.Float} is true
+            {%player's uuid%.bubble.jump} is not set
+            block under player is air
+            player is not on ground
+            teleport player to {%player's uuid%.bubble.tp.loc}
+            detect(player, "Flight", "||", "Float")
+        loop {Bubble.Delay} times:
+          wait 0.21 second
+        delete {%player's uuid%.bubble.flight.delay}
+
+on any movement:
+  set {_loc} to player's location
+  if player's chestplate is an elytra:
+    stop
+  if {%player's uuid%.bubble.epteleport} is true:
+    stop
+  if {%player's uuid%.bubble.teleport} is true:
+    stop
+  else if player's gamemode is not creative or spectator:
+    if {%player's uuid%.bubble.nochecks} is set:
+      wait 1 second
+      delete {%player's uuid%.bubble.nochecks}
+      stop
+    if {%player's uuid%.bubble.bypass} is not set:
+      if {%player's uuid%.bubble.cheat.cooldown} is not set:
+        set {%player's uuid%.bubble.cheat.cooldown} to true
+        if block under player is not air or water:
+          set {%player's uuid%.bubble.tp.loc} to {_loc}
+        #NoFall
+        {Bubble.NoFall} is true
+        if {@NoFall} is true:
+          if player's flight mode is false:
+            if {%player's uuid%.bubble.jump} is not set:
+              if block under player is air:
+                set {_yloc} to player's y coordinate
+                set {_health} to player's health
+                wait 0.5 seconds
+                set {_yloc1} to player's y coordinate
+                if player is on ground:
+                  block under player is not slime block
+                  set {_dis} to {_yloc} - {_yloc1}
+                  block under player is not air
+                  block at player is not cobweb, ladder, water or flowing water
+                  {%player's uuid%.bubble.nofall} is not set
+                  if {_dis} is greater than or equal to 5.5:
+                    if player's health = {_health}-0.5:
+                      set {_dmg} to floor({_dis} / 1)
+                      detect(player, "NoFall", "||", "Damage")
+                      set {%player's uuid%.bubble.nofall} to true
+                      wait 1 second
+                      delete {%player's uuid%.bubble.nofall}
+                      damage the player by {_dmg} heart
+                  if {_dis} is greater than or equal to 4.25:
+                    if player's health = {_health}:
+                      set {_dmg} to floor({_dis} / 1)
+                      detect(player, "NoFall", "|||", "Vanilla")
+                      set {%player's uuid%.bubble.nofall} to true
+                      wait 1 second
+                      delete {%player's uuid%.bubble.nofall}
+                      damage the player by {_dmg} heart
+        #Spider
+        {Bubble.Spider} is true
+        if block under player is air:
+          if block 2 under player is air:
+            if block 3 under player is air:
+              set {_y} to player's y coordinate
+              wait 1 tick
+              player's targeted block is not ladder
+              block at player is not water
+              if {%player's uuid%.bubble.jump} is not set:
+                if difference between {_y} and player's y coordinate is greater than 0.5:
+                  if difference between {_y} and player's y coordinate is less than 1:
+                    if distance between player and player's targeted block is less than 1.25:
+                      detect(player, "Spider", "|||", "Vanilla")
+                  else:
+                    if distance between player and player's targeted block is less than 1.25:
+                      {Bubble.Speed} is true
+                      detect(player, "Spider", "|||", "Speed")
+              else:
+                if difference between {_y} and player's y coordinate is greater than 0.5:
+                  if distance between player and player's targeted block is less than 1.25:
+                    detect(player, "Spider", "||", "Jump")
+        #Flight
+        if player's flight mode is false:
+          if block under player is air:
+            if player's chestplate is not an elytra:
+              if player doesn't have jump boost:
+                set {_y} to player's y coordinate
+                wait 10 ticks
+                if block under player is air:
+                  set {_y} to player's y coordinate - {_y}
+                  if {_y} >= 2:
+                    wait 1 tick
+                    if {%player's uuid%.bubble.fix.slime} is not set:
+                      set {_find} to player's location
+                      set {_count} to 255 - y coordinate of player
+                      loop 255 times:
+                        if block at {_find} is slime block:
+                          stop
+                          set {%player's uuid%.bubble.slime} to true
+                          wait 10 second
+                          delete {%player's uuid%.bubble.slime}
+                        else:
+                          remove 1 from y coordinate of {_find}
+                      if {%player's uuid%.bubble.slime} is not set:
+                        if block under player is air:
+                          if {%player's uuid%.bubble.slime} is not set:
+                            {Bubble.Flight} is true
+                            player's targeted block is not ladder
+                            block at player is not water
+                            teleport player to {%player's uuid%.bubble.tp.loc}
+                            detect(player, "Flight", "|||", "Vanilla")
+                            set {%player's uuid%::bubble.flight.status} to true
+                            wait 5 second
+                            delete {%player's uuid%::bubble.flight.status}
+                  else if {_y} = 0:
+                    if block under player is air:
+                      set {_y} to y coordinate of player - y coordinate of {%player's uuid%.bubble.tp.loc}
+                      if {_y} = 0:
+                        set {_b} to block under player
+                        set {_b1} to block under {_b}
+                        if {_b} is air:
+                          if {_b1} is air:
+                            if player is not on ground:
+                              {Bubble.Float} is true
+                              remove 1 from y coordinate of {%player's uuid%.bubble.tp.loc}
+                              teleport player to {%player's uuid%.bubble.tp.loc}
+                              detect(player, "Flight", "|||", "Float")
+                              add 1 to y coordinate of {%player's uuid%.bubble.tp.loc}
+          else:
+            #HOVER | FLIGHT | SPEED | CRITICALS
+            if {%player's uuid%.bubble.nochecks} is true:
+              stop
+              wait 1 second
+              delete {%player's uuid%.bubble.nochecks}
+            if {%player's uuid%.bubble.teleport} is true:
+              stop
+            if {%player's uuid%.bubble.epteleport} is true:
+              stop
+            else if {%player's uuid%.bubble.jump} is true:
+              stop
+            else:
+              if {%player's uuid%.bubble.falldmg} is not set:
+                if player's chestplate is not an elytra:
+                  if player is not on ground:
+                    if {%player's uuid%.bubble.jump} is not set:
+                      set {_loc1} to player's location
+                      set {_ycheck} to player's y coordinate
+                      set {_123.loc} to player's location
+                      wait 10 ticks
+                      set {_ycheck1} to player's y coordinate
+                      if {_ycheck1} >= {_ycheck}:
+                        if player is not on ground:
+                          set {_loop} to 255 -  y coordinate of player
+                          set y coordinate of {_123.loc} to 255
+                          loop {_loop} times:
+                            if block at {_123.loc} is slime block:
+                              stop
+                              set {%player's uuid%.bubble.slime} to true
+                              wait 10 second
+                              delete {%player's uuid%.bubble.slime}
+                            if block at {_123.loc} is air:
+                              remove 1 from y coordinate of {_123.loc}
+                        if {_loc1} = {_123.loc}:
+                          if player is not on ground:
+                            wait 3 ticks
+                            if {%player's uuid%.bubble.slime} is not set:
+                              if {%player's uuid%.bubble.damage} is not set:
+                                if {%player's uuid%.bubble.jump} is not set:
+                                  wait 2 ticks
+                                  if {%player's uuid%.bubble.fix.slime} is not set:
+                                    set {_find} to player's location
+                                    set {_count} to 255 - y coordinate of player
+                                    loop 255 times:
+                                      if block at {_find} is slime block:
+                                        stop
+                                        set {%player's uuid%.bubble.slime} to true
+                                        wait 5 second
+                                        delete {%player's uuid%.bubble.slime}
+                                      else:
+                                        remove 1 from y coordinate of {_find}
+                                    wait 1 tick
+                                    if player is not on ground:
+                                      if block under player is air:
+                                        player's chestplate is not an elytra
+                                        set {_b} to block under player
+                                        set {_b1} to block under {_b}
+                                        if {_b1} is air:
+                                          {Bubble.Flight} is true
+                                          detect(player, "Flight", "|||", "Vanilla")
+                                          teleport player to {%player's uuid%.bubble.tp.loc}
+                                      else:
+                                        if {%player's uuid%.bubble.falldmg} is not set:
+                                          if block at player is not water:
+                                            wait 1 tick
+                                            if {%player's uuid%.bubble.damage} is not set:
+                                              if block at player is not ladder:
+                                                {Bubble.Hover} is true
+                                                detect(player, "Flight", "||", "Hover")
+                                                teleport player to {%player's uuid%.bubble.tp.loc}
+                                              else:
+                                                detect(player, "Illegal Player Movement", "||", "NoFall")
+                                                teleport player to {%player's uuid%.bubble.tp.loc}
+                                            else:
+                                              {Bubble.Criticals} is true
+                                              detect(player, "Criticals", "|||", "Vanilla")
+                              else:
+                                {Bubble.Criticals} is true
+                                detect(player, "Criticals", "|||", "Vanilla")
+        #Speed
+        if player's flight mode is false:
+          if player doesn't have speed or jump boost:
+            if {%player's uuid%.bubble.nochecks} is not set:
+              if {%player's uuid%.bubble.teleport} is true:
+                stop
+              else if {%player's uuid%.bubble.epteleport} is true:
+                stop
+              else:
+                set {_x} to player's x coordinate
+                set {_z} to player's z coordinate
+                set {_bap} to block above player's head
+                wait 5 ticks
+                set {_bap2} to block above player's head
+                set {_x1} to player's x coordinate
+                set {_z1} to player's z coordinate
+                set {_x} to difference between {_x1} and {_x}
+                set {_z} to difference between {_z1} and {_z}
+                replace all "-" with "" in {_x}
+                replace all "-" with "" in {_z}
+                if {_x} > {_z}:
+                  set {_speed} to {_x}
+                if {_z} > {_x}:
+                  set {_speed} to {_z}
+                if {_x} = {_z}:
+                  set {_speed} to {_x}
+                player's walking speed is between 0 and 0.3
+                if {_speed} is greater than 2.1:
+                  if {%player's uuid%.bubble.teleport} is true:
+                    stop
+                  else if {%player's uuid%.bubble.epteleport} is true:
+                    stop
+                  set {%player's uuid%.bubble.cheat.speed} to {_speed} * 4
+                  if player is not riding:
+                    if {%player's uuid%.bubble.jump.bhop} is not set:
+                      if player is not flying:
+                        if block under player is not air:
+                          if block 2 under player is not air:
+                            {Bubble.Speed} is true
+                            teleport player to {%player's uuid%.bubble.tp.loc}
+                            detect(player, "Speed", "|||", "Vanilla")
+                          else:
+                            {Bubble.Speed} is true
+                            teleport player to {%player's uuid%.bubble.tp.loc}
+                            detect(player, "Speed", "|||", "Flight")
+                      else:
+                        {Bubble.Speed} is true
+                        teleport player to {%player's uuid%.bubble.tp.loc}
+                        detect(player, "Speed", "|||", "Flight")
+                    else:
+                      {Bubble.Bhop} is true
+                      {_bap} is air
+                      {_bap2} is air
+                      block above player is air
+                      teleport player to {%player's uuid%.bubble.tp.loc}
+                      detect(player, "Speed", "||", "Bhop")
+        #Jesus
+        if player's flight mode is false:
+          if block under player is water:
+            if block at player is not water:
+              loop 3 times:
+                wait 4 ticks
+                if block under player is water:
+                  if block at player is not water:
+                    add 1 to {_check}
+              if {_check} is greater than or equal to 2:
+                set {_loc.check} to player's location
+                remove 0.5 from y coordinate of {_loc.check}
+                player is not on ground
+                set {_locj} to player's location
+                remove 1 from y coordinate of {_locj}
+                teleport player to {_locj}
+                {Bubble.Jesus} is true
+                if {_check} is 2:
+                  detect(player, "Jesus", "|||", "Solid/Bhop")
+                else:
+                  detect(player, "Jesus", "|||", "Solid")
+      loop {Bubble.Delay} times:
+        wait 0.21 second
+      delete {%player's uuid%.bubble.cheat.cooldown}
+
+on jump:
+  if player's gamemode is not creative or spectator:
+    if {%player's uuid%.bubble.bypass} is not set:
+      if difference between {%player's uuid%.bubble.last.jump} and now is less than or equal to 1 seconds:
+        set {%player's uuid%.bubble.jump.bhop} to true
+        wait 10 ticks
+        delete {%player's uuid%.bubble.jump.bhop}
+      set {%player's uuid%.bubble.last.jump} to now
+      set {%player's uuid%.bubble.jump} to true
+      wait 10 ticks
+      delete {%player's uuid%.bubble.jump}
+
+on teleport:
+  if player's gamemode is not creative or spectator:
+    if {%player's uuid%.bubble.bypass} is not set:
+      set {%player's uuid%.bubble.teleport} to true
+      wait 1 second
+      delete {%player's uuid%.bubble.teleport}
+
+on right click:
+  if player's gamemode is not creative or spectator:
+    if {%player's uuid%.bubble.bypass} is not set:
+      if player's held item is an enderpearl:
+        set {%player's uuid%.bubble.epteleport} to true
+        wait 1 second
+        delete {%player's uuid%.bubble.epteleport}
+
+on damage:
+  if {Bubble.Autoclicker} is true:
+    if attacker's gamemode is not creative or spectator:
+      if {%attacker's uuid%.bubble.bypass} is not set:
+        add 1 to {%attacker's uuid%.bubble.cps}
+
+every 2 seconds:
+  if {Bubble.Autoclicker} is true:
+    loop all players:
+      if loop-player's gamemode is not creative or spectator:
+        if {%loop-player's uuid%.bubble.bypass} is not set:
+          if {%loop-player's uuid%.bubble.bypass} >= {@MaxCPS}:
+            detect(loop-player, "Autoclicker", "||", "%{_cps}%")
+          delete {%loop-player's uuid%.bubble.cps}
+
+on death:
+  #Killaura
+  if victim is a player:
+    set {%victim's uuid%.bubble.death} to true
+    wait 5 second
+    delete {%victim's uuid%.bubble.death}
+  if victim is a chicken:
+    if name of victim is "Choinky":
+      clear the drops
+    else if name of victim is "Choinken":
+      cancel event
+  if attacker is a player:
+    if attacker's gamemode is not creative or spectator:
+      if {%attacker's uuid%.bubble.bypass} is not set:
+        if {%attacker's uuid%.bubble.cheat.cooldown.damage} is not set:
+          set {%attacker's uuid%.bubble.cheat.cooldown.damage} to true
+          if "%damage cause%" is not "fall", "void" or "unknown":
+            if projectile doesn't exist:
+              set {%attacker's uuid%.bubble.damage} to true
+              wait 1 second
+              delete {%attacker's uuid%.bubble.damage}
+  if victim is a player:
+    if victim's gamemode is not creative or spectator:
+      if {%victim's uuid%.bubble.bypass} is not set:
+        if damage cause is fall:
+          set {%victim's uuid%.bubble.falldmg} to true
+          wait 10 ticks
+          delete {%victim's uuid%.bubble.falldmg}
+        if {%attacker's uuid%.bubble.killaura.check} is not set:
+          if name of victim is "Choinky":
+            stop
+          else:
+            set {%attacker's uuid%.bubble.killaura.check} to true
+            set {_loc} to attacker's location
+            add 3 to y coordinate of {_loc}
+            wait 2 ticks
+            spawn chicken at {_loc}
+            hide spawned chicken from all players
+            set name of last spawned chicken to "Choinky"
+            wait 3 ticks
+            set y coordinate of {_loc} to 255
+            teleport last spawned chicken to {_loc}
+            kill last spawned chicken
+            wait 1 second
+            delete {%attacker's uuid%.bubble.killaura.check}
+
+on damage:
+  victim is a player:
+    set {%victim's uuid%.bubble.damage} to true
+    set {%victim's uuid%.bubble.damage.other} to true
+    wait 2 ticks
+    delete {%victim's uuid%.bubble.damage}
+    wait 2 ticks
+    delete {%victim's uuid%.bubble.damage.other}
+
+on damage:
+  #REACH
+  {Bubble.Reach} is true
+  delete {%attacker's uuid%.bubble.cheat.cooldown.damage}
+  if distance between attacker and victim is greater than 4.25:
+    set {_r} to distance between attacker and victim
+    if attacker is a player:
+      if {%attacker's uuid%.bubble.bypass} is not set:
+        if {%attacker's uuid%.bubble.cheat.cooldown.damage} is not set:
+          set {%attacker's uuid%.bubble.cheat.cooldown.damage} to true
+          if "%damage cause%" is not "fall", "void" or "unknown":
+            if projectile doesn't exist:
+              if {%attacker's uuid%.bubble.autoclicker.check} is not set:
+                if {_r} is less than 4.5:
+                  detect(attacker, "Reach", "||", "Ghost")
+                else if {_r} is less than 5.5:
+                  detect(attacker, "Reach", "||", "Vanilla")
+                else:
+                  detect(attacker, "Reach", "|||", "Blatant")
+                set {%attacker's uuid%.bubble.reach} to true
+                wait 2 seconds
+                delete {%attacker's uuid%.bubble.reach}
+              else:
+                if {%attacker's uuid%.bubble} > 5:
+                  detect(attacker, "Killaura", "|||", "Vanilla")
+          delete {%attacker's uuid%.bubble.cheat.cooldown.damage}
+
+on damage:
+  #Velocity or AntiKB
+  if victim is a chicken:
+    if attacker is a player:
+      if attacker's gamemode is not creative or spectator:
+        if {%attacker's uuid%.bubble.bypass} is not set:
+          if name of victim is "Choinky":
+            detect(attacker, "Killaura", "|||", "MobAura")
+          else if name of victim is "Choinken":
+            detect(attacker, "Killaura", "||", "MobAura")
+  if victim is a player:
+    {Bubble.Velocity} is true
+    victim's gamemode is survival or adventure
+    {%attacker's uuid%.bubble.bypass} is not set
+    set {_loc} to victim's location
+    if {%victim's uuid%.bubble.cheat.cooldown.damage} is not set:
+      set {%victim's uuid%.bubble.cheat.cooldown.damage} to true
+      if damage cause is not contact, fall, burning, hunger, drown or unknown:
+        "%damage cause%" is not "unknown"
+        push the victim backwards with force 0.1
+        wait 2 ticks
+        set {_d} to distance between victim's location and {_loc}
+        if {_d} is between -0 and 0.2:
+          if {%victim's uuid%.bubble.death} is not set:
+            loop all blocks in radius 1 around victim:
+              if loop-block is not air:
+                if loop-block is not block under victim or block above victim's head:
+                  add 1 to {_count}
+            set {_loc.player} to victim's location
+            add 1 to y coordinate of {_loc.player}
+            loop all blocks in radius 1 around {_loc.player}:
+              if loop-block is not air:
+                if loop-block is not block under victim or block above victim's head:
+                  add 1 to {_count}
+            if {_count} > 1:
+              stop
+            projectile doesn't exist
+            block at victim is air
+            detect(victim, "Velocity", "||", "%damage cause%")
+    loop {Bubble.Delay} times:
+      wait 0.21 second
+    if victim is a player:
+      delete {%victim's uuid%.bubble.cheat.cooldown.damage}
+    if attacker is a player:
+      delete {%attacker's uuid%.bubble.cheat.cooldown.damage}
+
+on damage:
+  if attacker is a player:
+    set {_a.v} to distance between attacker and victim
+    set {_a.atb} to distance between attacker and attacker's targeted block
+    attacker's targeted block is not block under victim
+    if attacker's gamemode is not creative or spectator:
+      if {%attacker's uuid%.bubble.bypass} is not set:
+        set {%victim's uuid%.bubble.cheat.cooldown.damage} to true
+        if projectile doesn't exist:
+          if {_a.v} > {_a.atb}:
+            detect(attacker, "Killaura", "|||", "Malicious Hits")
+        delete {%attacker's uuid%.bubble.killaura.check}
+  loop {Bubble.Delay} times:
+    wait 0.21 second
+  delete {%attacker's uuid%.bubble.cheat.cooldown.damage}
+
+function reload(p: text):
+  if {Bubble.Theme} is not set:
+    set {Bubble.Theme} to 1
+  if {Bubble.Prefix} is not set:
+    set {Bubble.Prefix} to "{@Prefix}"
+  if {Bubble.Autoclicker} is not set:
+    set {Bubble.Autoclicker} to true
+  if {Bubble.Criticals} is not set:
+    set {Bubble.Criticals} to true
+  if {Bubble.Reach} is not set:
+    set {Bubble.Reach} to true
+  if {Bubble.Velocity} is not set:
+    set {Bubble.Velocity} to true
+  if {Bubble.Bhop} is not set:
+    set {Bubble.Bhop} to true
+  if {Bubble.Blink} is not set:
+    set {Bubble.Blink} to true
+  if {Bubble.ClickTP} is not set:
+    set {Bubble.ClickTP} to true
+  if {Bubble.Flight} is not set:
+    set {Bubble.Flight} to true
+  if {Bubble.Float} is not set:
+    set {Bubble.Float} to true
+  if {Bubble.HighJump} is not set:
+    set {Bubble.HighJump} to true
+  if {Bubble.Hover} is not set:
+    set {Bubble.Hover} to true
+  if {Bubble.Jesus} is not set:
+    set {Bubble.Jesus} to true
+  if {Bubble.NoFall} is not set:
+    set {Bubble.NoFall} to true
+  if {Bubble.NoSlow} is not set:
+    set {Bubble.NoSlow} to true
+  if {Bubble.Scaffold} is not set:
+    set {Bubble.Scaffold} to true
+  if {Bubble.Speed} is not set:
+    set {Bubble.Speed} to true
+  if {Bubble.Spider} is not set:
+    set {Bubble.Spider} to true
+  if {Bubble.Step} is not set:
+    set {Bubble.Step} to true
+  if {_p} is "console":
+    send "%{bubble.prefix}% &6%script%&6.sk &7has reloaded!" to console
+  else:
+    send "%{bubble.prefix}% &6%script%&6.sk &7has reloaded!" to {_p} parsed as player
+
+
+function detect(p: player, cheat: text, vl:text, type: text):
+  set {_uuid} to uuid of {_p}
+  if {_vl} is "||":
+    add 0.5 to {bubble.detections}
+    add 0.5 to {%{_uuid}%.bubble}
+  if {_vl} is "|||":
+    add 1 to {bubble.detections}
+    add 1 to {%{_uuid}%.bubble}
+  set {_uuid} to uuid of {_p}
+  loop all players:
+    if {%loop-player's uuid%.bubble.view.report} is set:
+      if {Bubble.Theme} is "Bubble":
+        if {_type} is not set:
+          send "%{Bubble.Prefix}% &4%{_p}% &7failed &6%{_cheat}%&7! &8(&e%{%{_uuid}%.bubble}%&8) &8(&7Ping: &a%{_p}'s ping%&8)" to loop-player
+        else if {_type} is "Autoclicker":
+          send "%{Bubble.Prefix}% &4%{_p}% &7failed &6%{_cheat}%&7! &8[&7CPS: &c%{_type}%&8] 8(&e%{%{_uuid}%.bubble}%&8) &8(&7Ping: &a%{_p}'s ping%&8)" to loop-player
+        else if {_cheat} is "Speed", "ClickTP" or "Blink":
+          send "%{Bubble.Prefix}% &4%{_p}% &7failed &6%{_cheat}%&7! &8(&7Speed: &e%{%{_uuid}%.bubble.cheat.speed}%&6/s&8) &8(&7Type: &c%{_type}%&8) &8(&e%{%{_uuid}%.bubble}%&8) &8(&7Ping: &a%{_p}'s ping%&8)" to loop-player
+        else:
+          send "%{Bubble.Prefix}% &4%{_p}% &7failed &6%{_cheat}%&7! &8(&7Type: &c%{_type}%&8) &8(&e%{%{_uuid}%.bubble}%&8) &8(&7Ping: &a%{_p}'s ping%&8)" to loop-player
+      if {Bubble.Theme} is "Ocean":
+        if {_type} is not set:
+          send "%{Bubble.Prefix}% &1%{_p}% &bfailed &6%{_cheat}%&b! &4[&8VL: &c%{_vl}%&4] &8(&e%{%{_uuid}%.bubble}%&8) &8(&7Ping: &a%{_p}'s ping%&8)" to loop-player
+        else if {_type} is "Autoclicker":
+          send "%{Bubble.Prefix}% &1%{_p}% &bfailed &6%{_cheat}%&b! &8[&7CPS: &c%{_type}%&8] &4[&8VL: &c%{_vl}%&4] &8(&e%{%{_uuid}%.bubble}%&8) &8(&7Ping: &a%{_p}'s ping%&8)" to loop-player
+        else if {_cheat} is "Speed", "ClickTP" or "Blink":
+          send "%{Bubble.Prefix}% &1%{_p}% &bfailed &6%{_cheat}%&b! &8(&7Speed: &e%{%{_uuid}%.bubble.cheat.speed}%&6/s&8) &8(&7Type: &c%{_type}%&8) &4[&8VL: &c%{_vl}%&4] &8(&e%{%{_uuid}%.bubble}%&8) &8(&7Ping: &a%{_p}'s ping%&8)" to loop-player
+        else:
+          send "%{Bubble.Prefix}% &1%{_p}% &bfailed &6%{_cheat}%&b! &8(&7Type: &c%{_type}%&8) &4[&8VL: &c%{_vl}%&4] &8(&e%{%{_uuid}%.bubble}%&8) &8(&7Ping: &a%{_p}'s ping%&8)" to loop-player
+      if {Bubble.Theme} is "World":
+        if {_type} is not set:
+          send "%{Bubble.Prefix}% &6%{_p}% &efailed &6%{_cheat}%&e! &4[&8VL: &c%{_vl}%&4] &8(&e%{%{_uuid}%.bubble}%&8) &8(&7Ping: &a%{_p}'s ping%&8)" to loop-player
+        else if {_type} is "Autoclicker":
+          send "%{Bubble.Prefix}% &6%{_p}% &efailed &6%{_cheat}%&e! &8[&7CPS: &c%{_type}%&8] &4[&8VL: &c%{_vl}%&4] &8(&e%{%{_uuid}%.bubble}%&8) &8(&7Ping: &a%{_p}'s ping%&8)" to loop-player
+        else if {_cheat} is "Speed", "ClickTP" or "Blink":
+          send "%{Bubble.Prefix}% &6%{_p}% &efailed &6%{_cheat}%&e! &8(&7Speed: &e%{%{_uuid}%.bubble.cheat.speed}%&6/s&8) &8(&7Type: &c%{_type}%&8) &4[&8VL: &c%{_vl}%&4] &8(&e%{%{_uuid}%.bubble}%&8) &8(&7Ping: &a%{_p}'s ping%&8)" to loop-player
+        else:
+          send "%{Bubble.Prefix}% &6%{_p}% &efailed &6%{_cheat}%&e! &8(&7Type: &c%{_type}%&8) &4[&8VL: &c%{_vl}%&4] &8(&e%{%{_uuid}%.bubble}%&8) &8(&7Ping: &a%{_p}'s ping%&8)" to loop-player
+      if {Bubble.Theme} is "Nether":
+        if {_type} is not set:
+          send "%{Bubble.Prefix}% &8%{_p}% &4failed &6%{_cheat}%&4! &4[&8VL: &c%{_vl}%&4] &8(&e%{%{_uuid}%.bubble}%&8) &8(&7Ping: &a%{_p}'s ping%&8)" to loop-player
+        else if {_type} is "Autoclicker":
+          send "%{Bubble.Prefix}% &8%{_p}% &4failed &6%{_cheat}%&4! &8[&7CPS: &c%{_type}%&8] &4[&8VL: &c%{_vl}%&4] &8(&e%{%{_uuid}%.bubble}%&8) &8(&7Ping: &a%{_p}'s ping%&8)" to loop-player
+        else if {_cheat} is "Speed", "ClickTP" or "Blink":
+          send "%{Bubble.Prefix}% &8%{_p}% &4failed &6%{_cheat}%&4! &8(&7Speed: &e%{%{_uuid}%.bubble.cheat.speed}%&6/s&8) &8(&7Type: &c%{_type}%&8) &4[&8VL: &c%{_vl}%&4] &8(&e%{%{_uuid}%.bubble}%&8) &8(&7Ping: &a%{_p}'s ping%&8)" to loop-player
+        else:
+          send "%{Bubble.Prefix}% &8%{_p}% &4failed &6%{_cheat}%&4! &8(&7Type: &c%{_type}%&8) &4[&8VL: &c%{_vl}%&4] &8(&e%{%{_uuid}%.bubble}%&8) &8(&7Ping: &a%{_p}'s ping%&8)" to loop-player
+      if {Bubble.Theme} is "End":
+        if {_type} is not set:
+          send "%{Bubble.Prefix}% &d%{_p}% &5failed &6%{_cheat}%&d! &4[&8VL: &c%{_vl}%&4] &8(&e%{%{_uuid}%.bubble}%&8) &8(&7Ping: &a%{_p}'s ping%&8)" to loop-player
+        else if {_type} is "Autoclicker":
+          send "%{Bubble.Prefix}% &5%{_p}% &dfailed &6%{_cheat}%&d! &8[&7CPS: &c%{_type}%&8] &4[&8VL: &c%{_vl}%&4] &8(&e%{%{_uuid}%.bubble}%&8) &8(&7Ping: &a%{_p}'s ping%&8)" to loop-player
+        else if {_cheat} is "Speed", "ClickTP" or "Blink":
+          send "%{Bubble.Prefix}% &5%{_p}% &dfailed &6%{_cheat}%&d! &8(&7Speed: &e%{%{_uuid}%.bubble.cheat.speed}%&6/s&8) &8(&7Type: &c%{_type}%&8) &4[&8VL: &c%{_vl}%&4] &8(&e%{%{_uuid}%.bubble}%&8) &8(&7Ping: &a%{_p}'s ping%&8)" to loop-player
+        else:
+          send "%{Bubble.Prefix}% &5%{_p}% &dfailed &6%{_cheat}%&d! &8(&7Type: &c%{_type}%&8) &4[&8VL: &c%{_vl}%&4] &8(&e%{%{_uuid}%.bubble}%&8) &8(&7Ping: &a%{_p}'s ping%&8)" to loop-player
+  if "%{_cheat}%" is not "Illegal Player Movement":
+    if {%{_uuid}%.bubble.cheat::*} doesn't contain "%{_cheat}%":
+      add "%{_cheat}%" to {%{_uuid}%.bubble.cheat::*}
+  if {bubble.report.bubble::*} is not set:
+    add {_p} to {bubble.report.bubble::*}
+  if {@InstantKick} is true:
+    kick {_p} due to "%{Bubble.Prefix}% &c%{_cheat}%"
+
+command /report [<offline player>] [<text>]:
+  permission: {@ReportSend}
+  permission message: %{bubble.prefix}% &cNo Perms!
+  trigger:
+    if arg-1 is not set:
+      send "%{Bubble.Prefix}% &cInvalid Usage! &4(&c/report <player> <reason>&4)"
+    else:
+      if arg-2 is not set:
+        send "%{Bubble.Prefix}% &cInvalid Usage! &4(&c/report <player> <reason>&4)"
+      else:
+        if arg-1 is offline:
+          send "%{Bubble.Prefix}% &cThat player is offline!"
+        else:
+          if arg-1 is sender:
+            send "%{Bubble.Prefix}% &cYou can't report yourself!"
+          else:
+            if {bubble.report.by.%arg-1's uuid%::*} contains "%sender%":
+              send "%{Bubble.Prefix}% &cYou have already reported that player!"
+            else:
+              send "%{Bubble.Prefix}% &e%sender% &7reported &e%arg-1% &7for &6%arg-2%&7!" to all players where [player input has permission "{@ReportReceive}"]
+              if {bubble.report.players::*} doesn't contain arg-1:
+                add argument 1 to {bubble.report.players::*}
+              add argument 2 to {bubble.report.reason.%arg-1's uuid%::*}
+              add "%sender%" to {bubble.report.by.%arg-1's uuid%::*}
+
+command /flagtoggle [<text>]:
+  permission: togglecheat, tc
+  permission: {@manage}
+  trigger:
+    if arg-1 is "Autoclicker", "Criticals", "Reach", "Killaura", "Velocity", "Bhop", "Blink", "ClickTP", "Flight", "Float", "HighJump", "Hover", "Jesus", "NoFall", "NoSlow", "Scaffold", "Speed", "Spider" or "Step":
+      if {Bubble.%arg-1%} is false:
+        send "%{Bubble.Prefix}% &e%sender% &7has &aenabled &6%arg-1%&7!" to all players where [player input has permission "{@manage}"]
+        set {Bubble.%arg-1%} to true
+        stop
+      else:
+        send "%{Bubble.Prefix}% &e%sender% &7has &cdisabled &6%arg-1%&7!" to all players where [player input has permission "{@manage}"]
+        set {Bubble.%arg-1%} to false
+        stop
+    else:
+      send "%{Bubble.Prefix}% &cInvalid Argument! &8(&6Autoclicker, Bhop, Blink, ClickTP, Criticals, Flight, Float, HighJump, Hover, Jesus, Killaura, NoFall, NoSlow, Reach, Scaffold, Speed, Spider, Step, Velocity&8)"
+
+command /bacgui [<text>] [<text>] [<text>]:
+  aliases: /reports, /reportlist, /reportslist, /bubblegui
+  permission: {@GUI}
+  permission message: %{Bubble.Prefix}% &cNo Perms!
+  trigger:
+    if arg-1 is not set:
+      open chest with 1 row named "%{Bubble.Prefix}% &8%player%&8\" to player
+      set slot 0 of player's current inventory to black stained glass pane named "&7" with lore "&7", "&7" and "&7"
+      set slot 1 of player's current inventory to paper named "&7Reports" with lore "&7", "&7View bubble reports and player reports." and "&7"
+      set slot 2 of player's current inventory to red stained glass pane named "&7" with lore "&7" and "&7"
+      set slot 3 of player's current inventory to arrow named "&7Detections" with lore "&7", "&7Enable or disable detections." and "&7"
+      set slot 4 of player's current inventory to red stained glass pane named "&7" with lore "&7" and "&7"
+      set slot 5 of player's current inventory to redstone torch named "&7Skript" with lore "&7" and "&7"
+      set slot 6 of player's current inventory to red stained glass pane named "&7" with lore "&7" and "&7"
+      set slot 7 of player's current inventory to barrier named "&cComing Soon!" with lore "&7" and "&7"
+      set slot 8 of player's current inventory to black stained glass pane named "&7" with lore "&7", "&7" and "&7"
+    if arg-1 is "detections":
+      if arg-2 is not set:
+        open chest with 1 row named "%{Bubble.Prefix}% &8%player%&8\&8Detections" to player
+        set slot 0 of player's current inventory to black stained glass pane named "&7" with lore "&7", "&7" and "&7"
+        set slot 1 of player's current inventory to black stained glass pane named "&7" with lore "&7", "&7" and "&7"
+        set slot 2 of player's current inventory to red stained glass pane named "&7" with lore "&7" and "&7"
+        set slot 3 of player's current inventory to diamond sword named "&6Combat Detections" with lore "&7", "&7Manage Combat Detections" and "&7"
+        set slot 4 of player's current inventory to red stained glass pane named "&7" with lore "&7" and "&7"
+        set slot 5 of player's current inventory to diamond boots named "&6Movement Detections" with lore "&7", "&7Manage Movement Detections" and "&7"
+        set slot 6 of player's current inventory to red stained glass pane named "&7" with lore "&7" and "&7"
+        set slot 7 of player's current inventory to black stained glass pane named "&7" with lore "&7", "&7" and "&7"
+        set slot 8 of player's current inventory to black stained glass pane named "&7" with lore "&7", "&7" and "&7"
+      if arg-2 is "movement":
+        open chest with 2 rows named "%{Bubble.Prefix}% &8%player%&8\&8Detections\&8Movement" to player
+        set slot 0 of player's current inventory to black stained glass pane named "&7" with lore "&7", "&7" and "&7"
+        set slot 8 of player's current inventory to black stained glass pane named "&7" with lore "&7", "&7" and "&7"
+        set slot 9 of player's current inventory to black stained glass pane named "&7" with lore "&7", "&7" and "&7"
+        set slot 16 of player's current inventory to black stained glass pane named "&7" with lore "&7", "&7" and "&7"
+        set slot 17 of player's current inventory to black stained glass pane named "&7" with lore "&7", "&7" and "&7"
+        if {Bubble.Bhop} is false:
+          set slot 1 of player's current inventory to red wool named "&cBhop" with lore "&7", "&7Click to Enable!" and "&7"
+        else:
+          set slot 1 of player's current inventory to lime wool named "&aBhop" with lore "&7", "&7Click to Disable!" and "&7"
+        if {Bubble.Blink} is false:
+          set slot 2 of player's current inventory to red wool named "&cBlink" with lore "&7", "&7Click to Enable!" and "&7"
+        else:
+          set slot 2 of player's current inventory to lime wool named "&aBlink" with lore "&7", "&7Click to Disable!" and "&7"
+        if {Bubble.ClickTP} is false:
+          set slot 3 of player's current inventory to red wool named "&cClickTP" with lore "&7", "&7Click to Enable!" and "&7"
+        else:
+          set slot 3 of player's current inventory to lime wool named "&aClickTP" with lore "&7", "&7Click to Disable!" and "&7"
+        if {Bubble.Flight} is false:
+          set slot 4 of player's current inventory to red wool named "&cFlight" with lore "&7", "&7Click to Enable!" and "&7"
+        else:
+          set slot 4 of player's current inventory to lime wool named "&aFlight" with lore "&7", "&7Click to Disable!" and "&7"
+        if {Bubble.Float} is false:
+          set slot 5 of player's current inventory to red wool named "&cFloat" with lore "&7", "&7Click to Enable!" and "&7"
+        else:
+          set slot 5 of player's current inventory to lime wool named "&aFloat" with lore "&7", "&7Click to Disable!" and "&7"
+        if {Bubble.HighJump} is false:
+          set slot 6 of player's current inventory to red wool named "&cHighJump" with lore "&7", "&7Click to Enable!" and "&7"
+        else:
+          set slot 6 of player's current inventory to lime wool named "&aHighJump" with lore "&7", "&7Click to Disable!" and "&7"
+        if {Bubble.Hover} is false:
+          set slot 7 of player's current inventory to red wool named "&cHover" with lore "&7", "&7Click to Enable!" and "&7"
+        else:
+          set slot 7 of player's current inventory to lime wool named "&aHover" with lore "&7", "&7Click to Disable!" and "&7"
+        if {Bubble.Jesus} is false:
+          set slot 7 of player's current inventory to red wool named "&cJesus" with lore "&7", "&7Click to Enable!" and "&7"
+        else:
+          set slot 7 of player's current inventory to lime wool named "&aJesus" with lore "&7", "&7Click to Disable!" and "&7"
+        if {Bubble.NoFall} is false:
+          set slot 10 of player's current inventory to red wool named "&cNoFall" with lore "&7", "&7Click to Enable!" and "&7"
+        else:
+          set slot 10 of player's current inventory to lime wool named "&aNoFall" with lore "&7", "&7Click to Disable!" and "&7"
+        if {Bubble.NoSlow} is false:
+          set slot 11 of player's current inventory to red wool named "&cNoSlow" with lore "&7", "&7Click to Enable!" and "&7"
+        else:
+          set slot 11 of player's current inventory to lime wool named "&aNoSlow" with lore "&7", "&7Click to Disable!" and "&7"
+        if {Bubble.Scaffold} is false:
+          set slot 12 of player's current inventory to red wool named "&cScaffold" with lore "&7", "&7Click to Enable!" and "&7"
+        else:
+          set slot 12 of player's current inventory to lime wool named "&aScaffold" with lore "&7", "&7Click to Disable!" and "&7"
+        if {Bubble.Speed} is false:
+          set slot 13 of player's current inventory to red wool named "&cSpeed" with lore "&7", "&7Click to Enable!" and "&7"
+        else:
+          set slot 13 of player's current inventory to lime wool named "&aSpeed" with lore "&7", "&7Click to Disable!" and "&7"
+        if {Bubble.Spider} is false:
+          set slot 14 of player's current inventory to red wool named "&cSpider" with lore "&7", "&7Click to Enable!" and "&7"
+        else:
+          set slot 14 of player's current inventory to lime wool named "&aSpider" with lore "&7", "&7Click to Disable!" and "&7"
+        if {Bubble.Step} is false:
+          set slot 15 of player's current inventory to red wool named "&cStep" with lore "&7", "&7Click to Enable!" and "&7"
+        else:
+          set slot 15 of player's current inventory to lime wool named "&aStep" with lore "&7", "&7Click to Disable!" and "&7"
+      if arg-2 is "combat":
+        open chest with 1 row named "%{Bubble.Prefix}% &8%player%&8\&8Detections\&8Combat" to player
+        set slot 0 of player's current inventory to black stained glass pane named "&7" with lore "&7", "&7" and "&7"
+        set slot 1 of player's current inventory to black stained glass pane named "&7" with lore "&7", "&7" and "&7"
+        if {Bubble.Autoclicker} is false:
+          set slot 2 of player's current inventory to red wool named "&cAutoclicker" with lore "&7", "&7Click to Enable!" and "&7"
+        else:
+          set slot 2 of player's current inventory to lime wool named "&aAutoclicker" with lore "&7", "&7Click to Disable!" and "&7"
+        if {Bubble.Criticals} is false:
+          set slot 3 of player's current inventory to red wool named "&cCriticals" with lore "&7", "&7Click to Enable!" and "&7"
+        else:
+          set slot 3 of player's current inventory to lime wool named "&aCriticals" with lore "&7", "&7Click to Disable!" and "&7"
+        if {Bubble.Killaura} is false:
+          set slot 4 of player's current inventory to red wool named "&cKillaura" with lore "&7", "&7Click to Enable!" and "&7"
+        else:
+          set slot 4 of player's current inventory to lime wool named "&aKillaura" with lore "&7", "&7Click to Disable!" and "&7"
+        if {Bubble.Reach} is false:
+          set slot 5 of player's current inventory to red wool named "&cReach" with lore "&7", "&7Click to Enable!" and "&7"
+        else:
+          set slot 5 of player's current inventory to lime wool named "&aReach" with lore "&7", "&7Click to Disable!" and "&7"
+        if {Bubble.Velocity} is false:
+          set slot 6 of player's current inventory to red wool named "&cVelocity" with lore "&7", "&7Click to Enable!" and "&7"
+        else:
+          set slot 6 of player's current inventory to lime wool named "&aVelocity" with lore "&7", "&7Click to Disable!" and "&7"
+        set slot 7 of player's current inventory to black stained glass pane named "&7" with lore "&7", "&7" and "&7"
+        set slot 8 of player's current inventory to black stained glass pane named "&7" with lore "&7", "&7" and "&7"
+    if arg-1 is "skript":
+      if arg-2 is not set:
+        open chest with 1 row named "%{Bubble.Prefix}% &8%player%&8\&8Skript" to player
+        set slot 0 of player's current inventory to black stained glass pane named "&7" with lore "&7", "&7" and "&7"
+        set slot 1 of player's current inventory to redstone repeater named "&6Reload &8(&7Player&8)" with lore "&7", "&7Reload this skript!" and "&7"
+        set slot 2 of player's current inventory to red stained glass pane named "&7" with lore "&7" and "&7"
+        set slot 3 of player's current inventory to redstone repeater  named "&6Reload &8(&7Console&8)" with lore "&7", "&7Reload this skript!" and "&7"
+        set slot 4 of player's current inventory to red stained glass pane named "&7" with lore "&7" and "&7"
+        set slot 5 of player's current inventory to redstone torch named "&eSoft Reload &8(&7Player&8)" with lore "&7", "&7Reload this skript!" and "&7"
+        set slot 6 of player's current inventory to red stained glass pane named "&7" with lore "&7" and "&7"
+        set slot 7 of player's current inventory to redstone torch named "&eSoft Reload &8(&7Console&8)" with lore "&7", "&7Reload this skript!" and "&7"
+        set slot 8 of player's current inventory to black stained glass pane named "&7" with lore "&7", "&7" and "&7"
+    if arg-1 is "reports":
+      if arg-2 is not set:
+        open chest with 1 row named "%{Bubble.Prefix}% &8%player%&8\Reports\" to player
+        set slot 0 of player's current inventory to black stained glass pane named "&7" with lore "&7", "&7" and "&7"
+        set slot 1 of player's current inventory to black stained glass pane named "&7" with lore "&7", "&7" and "&7"
+        set slot 2 of player's current inventory to red stained glass pane named "&7" with lore "&7" and "&7"
+        set slot 3 of player's current inventory to paper named "&7By Player" with lore "&7", "&7" and "&7"
+        set slot 4 of player's current inventory to red stained glass pane named "&7" with lore "&7" and "&7"
+        set slot 5 of player's current inventory to redstone named "&7By Bubble" with lore "&7" and "&7"
+        set slot 6 of player's current inventory to red stained glass pane named "&7" with lore "&7" and "&7"
+        set slot 7 of player's current inventory to black stained glass pane named "&7" with lore "&7", "&7" and "&7"
+        set slot 8 of player's current inventory to black stained glass pane named "&7" with lore "&7", "&7" and "&7"
+      if arg-2 is "player":
+        open chest with 6 rows named "%{Bubble.Prefix}% &8%player%&8\Reports\Player\" to player
+        set {_count} to 44
+        loop 9 times:
+          add 1 to {_count}
+          set slot {_count} of player's current inventory to black stained glass pane named "&7" with lore "&7", "&7" and "&7"
+        set {_count} to -1
+        loop {bubble.report.players::*}:
+          if {_count} is less than 45:
+            if loop-value is online:
+              add 1 to {_count}
+              set slot {_count} of player's current inventory to paper named "&c%loop-value%" with lore "&7", "&8Reason: &7%{bubble.report.reason.%loop-value's uuid%::*}%" and "&8Reported By: &7%{bubble.report.by.%loop-value's uuid%::*}%"
+        set slot 49 of player's current inventory to door named "&eBack" with lore "&7" and "&7"
+        if {_count} is -1:
+          set slot 22 of player's current inventory to barrier named "&cNo Players Found!" with lore "&7" and "&7"
+      if arg-2 is "bubble":
+        open chest with 6 rows named "%{Bubble.Prefix}% &8%player%&8\Reports\Bubble\" to player
+        set {_count} to 44
+        loop 9 times:
+          add 1 to {_count}
+          set slot {_count} of player's current inventory to black stained glass pane named "&7" with lore "&7", "&7" and "&7"
+        set {_count} to -1
+        loop {bubble.report.players::*}:
+          if {_count} is less than 45:
+            add 1 to {_count}
+          set slot {_count} of player's current inventory to black stained glass pane named "&7" with lore "&7", "&7" and "&7"
+          set {_count} to 8
+        set {_count} to -1
+        loop {bubble.report.bubble::*}:
+          if {_count} is less than 45:
+            if loop-value is online:
+              add 1 to {_count}
+              set slot {_count} of player's current inventory to paper named "&c%loop-value%" with lore "&7", "&8Reason: &7%{%loop-value's uuid%.bubble.cheat::*}%" and "&7"
+        set slot 49 of player's current inventory to door named "&eBack" with lore "&7" and "&7"
+        if {_count} is -1:
+          set slot 22 of player's current inventory to barrier named "&cNo Players Found!" with lore "&7" and "&7"
+
+on inventory click:
+  if inventory name of player's current inventory contains "%{Bubble.Prefix}%":
+    if inventory name of player's current inventory contains "%{Bubble.Prefix}% &8%player%&8\&8Detections\&8":
+      if inventory name of player's current inventory contains "Movement":
+        close inventory of player
+        set {_name} to uncolored name of clicked item
+        if {_name} is "Autoclicker", "Criticals", "Reach", "Killaura", "Velocity", "Bhop", "Blink", "ClickTP", "Flight", "Float", "HighJump", "Hover", "Jesus", "NoFall", "NoSlow", "Scaffold", "Speed", "Spider" or "Step":
+          player command "/flagtoggle %{_name}%"
+        player command "/bacgui detections movement"
+      else if inventory name of player's current inventory contains "Combat":
+        close inventory of player
+        set {_name} to uncolored name of clicked item
+        if {_name} is "Autoclicker", "Criticals", "Reach", "Killaura", "Velocity", "Bhop", "Blink", "ClickTP", "Flight", "Float", "HighJump", "Hover", "Jesus", "NoFall", "NoSlow", "Scaffold", "Speed", "Spider" or "Step":
+          player command "/flagtoggle %{_name}%"
+        player command "/bacgui detections combat"
+    if clicked slot is 3:
+      if clicked item is arrow:
+        if name of clicked item is "&7Detections":
+          close inventory of player
+          player command "bacgui detections"
+      if clicked item is diamond sword:
+        if name of clicked item is "&6Combat Detections":
+          close inventory of player
+          player command "bacgui detections combat"
+    if clicked slot is 5:
+      if clicked item is diamond boots:
+        if name of clicked item is "&6Movement Detections":
+          close inventory of player
+          player command "bacgui detections movement"
+    if clicked slot is 1 or 3:
+      if clicked item is redstone repeater:
+        if name of clicked item is "&6Reload &8(&7Player&8)":
+          close inventory of player
+          player command "skript reload %script%"
+        else:
+          if name of clicked item is "&6Reload &8(&7Console&8)":
+            close inventory of player
+            console command "skript reload %script%"
+    if clicked slot is 5 or 7:
+      if clicked item is redstone torch:
+        if name of clicked item is "&eSoft Reload &8(&7Player&8)":
+          close inventory of player
+          reload("%player%")
+        else:
+          if name of clicked item is "&eSoft Reload &8(&7Console&8)":
+            close inventory of player
+            reload("console")
+    if clicked slot is 5:
+      if clicked item is a redstone torch:
+        if name of clicked item is "&7Skript":
+          close inventory of player
+          player command "/bacgui skript"
+    if clicked slot is 49:
+      if inventory name of player's current inventory contains "\Reports\Bubble\" or "\Reports\Player\":
+        if clicked item is a door:
+          if name of clicked item is "&eBack":
+            close inventory of player
+            player command "/bacgui reports"
+    if clicked slot is 1:
+      if clicked item is a paper:
+        if name of clicked item is "&7Reports":
+          close inventory of player
+          player command "/bacgui reports"
+    if clicked slot is 3:
+      if clicked item is a paper:
+        if name of clicked item is "&7By Player":
+          close inventory of player
+          player command "/bacgui reports player"
+    if clicked slot is 5:
+      if clicked item is a redstone:
+        if name of clicked item is "&7By Bubble":
+          close inventory of player
+          player command "/bacgui reports bubble"
+    if clicked slot is between 0 and 44:
+      if clicked item is a paper:
+        if inventory name of player's current inventory contains "\Reports\Player\":
+          close inventory of player
+          set {_player} to uncolored name of clicked item
+          loop {bubble.report.players::*}:
+            if loop-value's name is {_player}:
+              set {_player} to loop-value
+              set {_player.uuid} to loop-value's uuid
+              set {_player.loc} to loop-value's location
+          add 3 to y coordinate of {_player.loc}
+          remove {_player} from {bubble.report.players::*}
+          delete {bubble.report.reason.%{_player.uuid}%::*}
+          delete {bubble.report.by.%{_player.uuid}%::*}
+          teleport the player to {_player.loc}
+          player command "/bacgui reports player"
+        if inventory name of player's current inventory contains "\Reports\Bubble\":
+          close inventory of player
+          set {_player} to uncolored name of clicked item
+          loop {bubble.bubble.players::*}:
+            if loop-value's name is {_player}:
+              set {_player} to loop-value
+              set {_player.uuid} to loop-value's uuid
+              set {_player.loc} to loop-value's location
+          add 3 to y coordinate of {_player.loc}
+          remove {_player} from {bubble.bubble.players::*}
+          teleport the player to {_player.loc}
+          player command "/bacgui reports bubble"
+      else:
+        cancel event
+    else:
+      cancel event
+
+on any movement:
+  if {@ProAuraBlocking} is true:
+    set {_uuid} to player's uuid
+    if {%{_uuid}%.last.spawn.chicken} is not set:
+      spawn chicken 1 meter below player
+      apply invisibility to last spawned chicken for 9999 days
+      set name of last spawned chicken to "Choinken"
+      set health of last spawned chicken to 1000000
+      heal last spawned chicken
+      set {%{_uuid}%.last.spawn.chicken} to "%last spawned chicken%"
+    else if last spawned chicken is alive:
+      teleport {%{_uuid}%.last.spawn.chicken} parsed as entity 3.5 meters above player
+    else:
+      delete {%{_uuid}%.last.spawn.chicken}
+
+on command:
+  if full command is "sk reload %script%" or "skript reload %script%":
+    set {bubble.last.reload} to "%sender%"
+
+on load:
+  wait 6 seconds
+  set {Bubble.LastLoad} to now
+  send "%{bubble.prefix}% &6%script%&6.sk &7has reloaded!" to {bubble.last.reload} parsed as player
+  delete {bubble.last.reload}
+
+on chat:
+  if message contains "stupid", "dumb", "bad", "garbage", "aweful", "suck" or "shit":
+    if message contains "anti cheat", "anticheat" or "bubble":
+      kick the player due to "{@Prefix} &cBubble detected idiot!"
+
+on disconnect:
+  delete {%player's uuid%.bubble.flight.delay}
+  delete {%player's uuid%.bubble.cheat.cooldown}
+  delete {%player's uuid%.bubble.cheat.cooldown.damage}
+  delete {%player's uuid%.bubble.bypass}
+  delete {%player's uuid%.bubble.nochecks}
+  delete {%player's uuid%.bubble.cancel.eat}
+  delete {%player's uuid%.bubble.jump}
+  delete {%player's uuid%.bubble.slime}
+
+on join:
+  set {%player's uuid%.bubble.bypass} to true
+  set {%player's uuid%.bubble.nochecks} to true
+  wait 3 seconds
+  delete {%player's uuid%.bubble.bypass}
+  delete {%player's uuid%.bubble.nochecks}
