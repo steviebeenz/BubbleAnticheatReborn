@@ -1,3 +1,4 @@
+<link rel="icon" href="https://www.spigotmc.org/data/resource_icons/79/79600.jpg">   
 # Bubble Anticheat Reborn
 
 ## The Anticheat That Everyone Loves, Reborn for 1.8 and Later.
