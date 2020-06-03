@@ -7,7 +7,7 @@
 ### Getting Started:
 
 First off, install Skript and SkUtilities. To get started, visit the
-[install page](install.md)
+[install page](install.html)
 
 ### Troubleshooting:
 
