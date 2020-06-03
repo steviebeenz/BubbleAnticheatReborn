@@ -1,24 +1,4 @@
-#THANKS FOR DOWNLOADING BUBBLE!
-
-#ADDONS: SkQuery, Skellett
-
-#Github: https://github.com/steviebeenz/bubbleac
 on load:
- if file "plugins/bubble/config.yml" exists:
-  send "Loading Config... Expect Lag" to console
- else:
-  download file from "https://raw.githubusercontent.com/steviebeenz/bubbleac/master/example-config.yml" to file "plugins/bubble/config.yml"
-  download file from "https://github.com/Sashie/skript-yaml/releases/download/v1.3.2/skript-yaml.jar" to file "plugins/skyaml.jar"
-  download file from "https://dev.bukkit.org/projects/skrayfall/files/2897860/download" to file "plugins/skrayfall.jar"
-  if first 3 characters of minecraft version is "1.8":
-   download file from "https://www.spigotmc.org/resources/skquery-3-1-7-1-8.69828/download?version=286435" to file "plugins/skquery.jar"
-  else:
-   download file from "https://www.spigotmc.org/resources/skquery-1-9-1-15.36631/download?version=311805" to file "plugins/skquery.jar"
-  download file from "https://www.spigotmc.org/resources/skript-java-addon-skellett.34361/download?version=295547" to file "plugins/skellet.jar"
-  wait 120 seconds
-  execute console command "kickall Finishing Installation"
-  execute console command "restart"
- set {mcr} to minecraft version
  load yaml "plugins/bubble/config.yml" as "config"
  set {Prefix} to yaml value "Prefix" from "config"
  set {Name} to yaml value "Name" from "config"
@@ -47,7 +27,7 @@ on load:
  set {CaptchaBypass} to yaml value "CaptchaBypass" from "config"
  set {GUI} to yaml value "GUI" from "config"
  set {Notify} to yaml value "Notify" from "config"
- set {PermformanceRun} to yaml value "PermformanceRun" from "config"
+ set {PerformanceRun} to yaml value "PerformanceRun" from "config"
  set {Player} to yaml value "Player" from "config"
  set {ReportSend} to yaml value "ReportSend" from "config"
  set {ReportReceive} to yaml value "ReportReceive" from "config"
@@ -68,20 +48,32 @@ on load:
  set {FlightFalseFlagPrevention} to yaml value "Prefix" from "config"
  set {ProAuraBlocking} to yaml value "Prefix" from "config"
  set {MaxCPS} to yaml value "Prefix" from "config"
+on load:
+ if file "plugins/bubble/config.yml" exists:
+  send "Loading Config... Expect Lag" to console
+ else:
+  download file from "https://raw.githubusercontent.com/steviebeenz/bubbleac/master/example-config.yml" to file "plugins/bubble/config.yml"
  wait 1 tick
  reload("console")
+ skutil delete file "plugins/Skript/scripts/bubble.sk"
  wait 6 seconds
+ download file from "https://rawcdn.githack.com/steviebeenz/bubbleac/968bfeff224e7a68b1103eb6fa4c584f430e15f9/bubble.sk" to file "plugins/Skript/scripts/bubble.sk"
  set {Bubble.LastLoad} to now
- send "%{bubble.prefix}% &7has reloaded! The server is on %minecraft version%" to {bubble.last.reload} parsed as player
+ send "%{bubble.prefix}% &7has reloaded! The server is on %minecraft version%. The current prefix is %{Name}%" to {bubble.last.reload} parsed as player
  delete {bubble.last.reload}
-options:
-    NoFall: true #If you have player fall damage disable set this to false
-    HighPingKick: true #If player's ping is greater than 999 it will kick them
-    MaxPing: 500
-    FlightFalseFlagPrevention: true #may cause lag, but 10/10 keep if you don't want flight false flags, these cases of false flags are rare.
-    ProAuraBlocking: false #Set to true, only if you have a good server. Hides entities 3.5 blocks above the player.
-    MaxCPS: 18
-
+ if file "plugins/bubble/config.yml" exists:
+  send "Great, your installation is complete" to console
+ else:
+  download file from "https://github.com/Sashie/skript-yaml/releases/download/v1.3.2/skript-yaml.jar" to file "plugins/skyaml.jar"
+  download file from "https://dev.bukkit.org/projects/skrayfall/files/2897860/download" to file "plugins/skrayfall.jar"
+  if first 3 characters of minecraft version is "1.8":
+   download file from "https://www.spigotmc.org/resources/skquery-3-1-7-1-8.69828/download?version=286435" to file "plugins/skquery.jar"
+  else:
+   download file from "https://www.spigotmc.org/resources/skquery-1-9-1-15.36631/download?version=311805" to file "plugins/skquery.jar"
+  download file from "https://www.spigotmc.org/resources/skript-java-addon-skellett.34361/download?version=295547" to file "plugins/skellet.jar"
+  wait 120 seconds
+  execute console command "kickall Finishing Installation"
+  execute console command "restart"
 every 8 seconds:
   if {FlightFalseFlagPrevention} is true:
     loop all players:
