@@ -1,0 +1,63 @@
+#Skript
+    Prefix: &8[&cBubble&8]
+    Name: Bubble
+    Stable: Stable
+    VersionStatus: Release
+    Version: 2.2.5 #Don't change this or I'll ban you
+  #Bot Prevention
+    CaptchaPrefix: &a[&eCaptcha&a]
+    Captcha: false #Makes player's say a random digit to prevent bottting
+    CaptchaDigit: 6 #How many digits the captcha has | Its better to keep 6 or less 6. Making it more will make it hard for players.
+    CaptchaTime: 30 #In seconds. How much time a player has to type the captcha code
+    CaptchaStartWithDot: true #Most if not all hacked clients have a "." command (ex: ".help")
+    IPCheck: true #Checks connected IPs
+    PlayersPerIP: 3 #How many player's can join from the same ip
+  #Cheat
+    InstantKick: false #Instantly kick the player if they cheat.
+    AutoWarn: false
+    AutoKick: false
+    AutoBan: false
+    All: false
+  #Ban
+    BanTime: 1d
+    ChecksToWarn: 50
+    ChecksToKick: 75
+    ChecksToBan: 100
+  #Performance:
+    MemorySaver: true #Will kill unnamed entities if tps is low.
+    Delay: 2 #(SECONDS") | Delay before the tests are retaken | How to set? Run "/bubble optimize" | If you want fast tests set between 1 to 5
+  #Permission
+    manage: bubble.manage
+    Bypass: bubble.bypass
+    CaptchaBypass: bubble.captcha.bypass
+    GUI: bubble.gui
+    Notify: bubble.notify
+    PermformanceRun: bubble.performace
+    Player: bubble.player
+    ReportSend: bubble.report.send
+    ReportReceive: bubble.staff.report.receive
+    Status: bubble.player.status
+    Theme: bubble.theme
+  #Error
+    Error1A: &4Error &8(&c1A&8)&c! &cAutoBan is neither true nor false!
+    Error2A: &4Error &8(&c2A&8)&c! &cAutoKick is neither true nor false!
+    Error3A: &4Error &8(&c3A&8)&c! &cBoth AutoBan and AutoKick can't be true!
+    Error4A: &4Error &8(&c4A&8)&c! &cAutoWarn is neither true nor false!
+    Error5A: &4Error &8(&c5A&8)&c! &cPlease disable everything in cheat category of options if &c'&cAll&c' &cis true!
+    Error6A: &4Error &8(&c6A&8)&c! &cInstant is neither true nor false!
+    Error7A: &4Error &8(&c7A&8)&c! &cPlease disable everything in cheat category of options if &c'&cInstantKick&c' &cis true!
+  #Website
+    Forum: none #Set to "none" if you don't have a website!
+    Store: none #Set to "none" if you don't have a website!
+  #Ban Command
+    BanCommand: ban loop-player due to "%nl% %{Bubble.Prefix}% %nl% &8%{%loop-player's uuid%.bubble.cheat::*}% %nl% %{_display}%" for {@BanTime}
+    #ban loop-player due to "%nl% %{Bubble.Prefix}% %nl% &8%{%loop-player's uuid%.bubble.cheat::*}% %nl% %{_display}%" for {@BanTime}
+    #or
+    #console command "tempban %loop-player% {@BanTime} %{Bubble.Prefix}% &8| &8%{%loop-player's uuid%.bubble.cheat::*}% &8| %{_display}%"
+  #Detections
+    NoFall: true #If you have player fall damage disable set this to false
+    HighPingKick: true #If player's ping is greater than 999 it will kick them
+    MaxPing: 500
+    FlightFalseFlagPrevention: true #may cause lag, but 10/10 keep if you don't want flight false flags, these cases of false flags are rare.
+    ProAuraBlocking: false #Set to true, only if you have a good server. Hides entities 3.5 blocks above the player.
+    MaxCPS: 18
