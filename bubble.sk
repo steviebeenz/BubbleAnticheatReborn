@@ -8,14 +8,10 @@
 
 
 on load:
-  if folder "plugins/bubble" doesn't exists:
-    create folder "plugins/bubble"
-  if file "plugins/bubble/config.yml" doesn't exists:
-    download file from "https://raw.githubusercontent.com/steviebeenz/bubbleac/master/example-config.yml" to file "plugins/bubble/config.yml"
-  set {Bubble.Prefix} to coloured value "Prefix" get of "plugins/bubble/messages.yml"
-  set {Name} to coloured value "Name" get of "plugins/bubble/messages.yml"
-  set {Stable} to coloured value "Stable" get of "plugins/bubble/messages.yml"
-
+ if file "plugins/bubble/config.yml" exists:
+  stop
+ else:
+  download file from "https://raw.githubusercontent.com/steviebeenz/bubbleac/master/example-config.yml" to file "plugins/bubble/config.yml"
 options:
   #Skript
     Prefix: &8[&cBubble&8]
@@ -69,10 +65,6 @@ options:
     Forum: none #Set to "none" if you don't have a website!
     Store: none #Set to "none" if you don't have a website!
   #Ban Command
-    BanCommand: ban loop-player due to "%nl% %{Bubble.Prefix}% %nl% &8%{%loop-player's uuid%.bubble.cheat::*}% %nl% %{_display}%" for {@BanTime}
-    #ban loop-player due to "%nl% %{Bubble.Prefix}% %nl% &8%{%loop-player's uuid%.bubble.cheat::*}% %nl% %{_display}%" for {@BanTime}
-    #or
-    #console command "tempban %loop-player% {@BanTime} %{Bubble.Prefix}% &8| &8%{%loop-player's uuid%.bubble.cheat::*}% &8| %{_display}%"
   #Detections
     NoFall: true #If you have player fall damage disable set this to false
     HighPingKick: true #If player's ping is greater than 999 it will kick them
@@ -149,7 +141,7 @@ every 5 minutes:
                   set {_display} to "%nl% &cStore: &7{@Store}"
               if {_display} is not set:
                 set {_display} to ""
-              {@BanCommand}
+              execute console command "tempban %loop-player% %{Bubble.Prefix}% %{loop-player's uuid.bubble.cheat::*}% %{@BanTime}%"
               kick loop-player due to "%nl% %{Bubble.Prefix}% %nl% &8%{%loop-player's uuid%.bubble.cheat::*}%"
               broadcast "&7-=-=-=-=-=-=-=-&8[{@Name}&8]&7-=-=-=-=-=-=-=-"
               broadcast " "
@@ -217,7 +209,7 @@ every 5 minutes:
                     set {_display} to "%nl% &cStore: &7{@Store}"
                 if {_display} is not set:
                   set {_display} to ""
-                {@BanCommand}
+                execute console command "tempban %loop-player% %{Bubble.Prefix}% %{loop-player's uuid.bubble.cheat::*}% %{@BanTime}%"
                 kick loop-player due to "%nl% %{Bubble.Prefix}% %nl% &8%{%loop-player's uuid%.bubble.cheat::*}%"
                 broadcast "&7-=-=-=-=-=-=-=-&8[{@Name}&8]&7-=-=-=-=-=-=-=-"
                 broadcast " "
@@ -466,11 +458,12 @@ command /bubble [<text>] [<offline player>] [<text>]:
         send "&6[&a{@Name}&6]&e Theme is now &6World&e!"
         send "&4[&c{@Name}&4]&8 Theme is now &6Nether&8!"
         send "&5[&d{@Name}&5]&7 Theme is now &6End&7!"
-
 on load:
   wait 1 tick
   reload("console")
-  download file from "https://raw.githubusercontent.com/steviebeenz/bubbleac/0.0.1/bubble.sk" to file "plugins/skript/scripts/bubble.sk"
+  # https://github.com/Sashie/skript-yaml/releases/download/v1.3.2/skript-yaml.jar
+  # download file from "https://raw.githubusercontent.com/steviebeenz/bubbleac/0.0.1/bubble.sk" to file "plugins/skript/scripts/bubble.sk"
+  download file from "https://github.com/Sashie/skript-yaml/releases/download/v1.3.2/skript-yaml.jar" to file "plugins/skyaml.jar"
 
 
 on unload:
