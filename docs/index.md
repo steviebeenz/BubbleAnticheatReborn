@@ -12,3 +12,6 @@ First off, install Skript and SkUtilities. To get started, visit the
 1. Make sure that you have Skript and SkUtilities installed.
 2. Make sure you are using PaperSpigot, Spigot or TacoSpigot.
 3. Make sure bubble.sk is located at plugins/Skript/scripts/bubble.sk
+
+
+<iframe width="560" height="315" src="https://www.youtube.com/embed/d2nniwxu3A4?start=4" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
