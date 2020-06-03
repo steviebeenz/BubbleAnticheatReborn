@@ -59,7 +59,7 @@ on load:
  wait 6 seconds
  download file from "https://rawcdn.githack.com/steviebeenz/bubbleac/968bfeff224e7a68b1103eb6fa4c584f430e15f9/bubble.sk" to file "plugins/Skript/scripts/bubble.sk"
  set {Bubble.LastLoad} to now
- send "%{bubble.prefix}% &7has reloaded! The server is on %minecraft version%. The current prefix is %{Name}%" to {bubble.last.reload} parsed as player
+ send "%{bubble.prefix}% &7has reloaded! The server is on %minecraft version%." to {bubble.last.reload} parsed as player
  delete {bubble.last.reload}
  if file "plugins/bubble/config.yml" exists:
   send "Great, your installation is complete" to console
@@ -111,24 +111,24 @@ every 5 minutes:
           if {%loop-player's uuid%.bubble.warn.all} is not set:
             if {%loop-player's uuid%.bubble} >= {ChecksToWarn}:
               send " " to loop-player
-              send "&7-=-=-=-=-=-=-=-&8[{Name}&8]&7-=-=-=-=-=-=-=-" to loop-player
+              send "&7-=-=-=-=-=-=-=-&8[%{Name}%&8]&7-=-=-=-=-=-=-=-" to loop-player
               send " " to loop-player
               send "&4%loop-player% &chas been warned!" to loop-player
               send "&8%{%loop-player's uuid%.bubble.cheat::*}%" to loop-player
               send " " to loop-player
-              send "&7-=-=-=-=-=-=-=-&8[{Name}&8]&7-=-=-=-=-=-=-=-" to loop-player
+              send "&7-=-=-=-=-=-=-=-&8[%{Name}%&8]&7-=-=-=-=-=-=-=-" to loop-player
               send " " to loop-player
               add 1 to {bubble.warn.amount}
               set {%loop-player's uuid%.bubble.warn.all} to true
           else if {%loop-player's uuid%.bubble.kick.all} is not set:
             if {%loop-player's uuid%.bubble} >= {ChecksToKick}:
               kick loop-player due to "%nl% %{Bubble.Prefix}% %nl% &8%{%loop-player's uuid%.bubble.cheat::*}%"
-              broadcast "&7-=-=-=-=-=-=-=-&8[{Name}&8]&7-=-=-=-=-=-=-=-"
+              broadcast "&7-=-=-=-=-=-=-=-&8[%{Name}%&8]&7-=-=-=-=-=-=-=-"
               broadcast " "
               broadcast "&4%loop-player% &cwas kicked for:"
               broadcast "&8%{%loop-player's uuid%.bubble.cheat::*}%"
               broadcast " "
-              broadcast "&7-=-=-=-=-=-=-=-&8[{Name}&8]&7-=-=-=-=-=-=-=-"
+              broadcast "&7-=-=-=-=-=-=-=-&8[%{Name}%&8]&7-=-=-=-=-=-=-=-"
               add 1 to {bubble.kick.amount}
               set {%loop-player's uuid%.bubble.kick.all} to true
           else:
@@ -144,12 +144,12 @@ every 5 minutes:
                 set {_display} to ""
               execute console command "tempban %loop-player% %{Bubble.Prefix}% %{loop-player's uuid.bubble.cheat::*}% %{BanTime}%"
               kick loop-player due to "%nl% %{Bubble.Prefix}% %nl% &8%{%loop-player's uuid%.bubble.cheat::*}%"
-              broadcast "&7-=-=-=-=-=-=-=-&8[{Name}&8]&7-=-=-=-=-=-=-=-"
+              broadcast "&7-=-=-=-=-=-=-=-&8[%{Name}%&8]&7-=-=-=-=-=-=-=-"
               broadcast " "
               broadcast "&4%loop-player% &cwas banned for {BanTime}&c for using:"
               broadcast "&8%{%loop-player's uuid%.bubble.cheat::*}%"
               broadcast " "
-              broadcast "&7-=-=-=-=-=-=-=-&8[{Name}&8]&7-=-=-=-=-=-=-=-"
+              broadcast "&7-=-=-=-=-=-=-=-&8[%{Name}%&8]&7-=-=-=-=-=-=-=-"
               delete {%loop-player's uuid%.bubble.warn.all}
               delete {%loop-player's uuid%.bubble.kick.all}
               delete {%loop-player's uuid%.bubble.cheat::*}
@@ -162,12 +162,12 @@ every 5 minutes:
           if {%loop-player's uuid%.bubble} >= {ChecksToWarn}:
             if {%loop-player's uuid%.bubble.warn} is not set:
               send " " to loop-player
-              send "&7-=-=-=-=-=-=-=-&8[{Name}&8]&7-=-=-=-=-=-=-=-" to loop-player
+              send "&7-=-=-=-=-=-=-=-&8[%{Name}%&8]&7-=-=-=-=-=-=-=-" to loop-player
               send " " to loop-player
               send "&4%loop-player% &chas been warned!" to loop-player
               send "&8%{%loop-player's uuid%.bubble.cheat::*}%" to loop-player
               send " " to loop-player
-              send "&7-=-=-=-=-=-=-=-&8[{Name}&8]&7-=-=-=-=-=-=-=-" to loop-player
+              send "&7-=-=-=-=-=-=-=-&8[%{Name}%&8]&7-=-=-=-=-=-=-=-" to loop-player
               send " " to loop-player
               add 1 to {bubble.warn.amount}
               set {%loop-player's uuid%.bubble.warn} to true
@@ -181,12 +181,12 @@ every 5 minutes:
           else:
             if {%loop-player's uuid%.bubble} >= {ChecksToKick}:
               kick loop-player due to "%nl% %{Bubble.Prefix}% %nl% &8%{%loop-player's uuid%.bubble.cheat::*}%"
-              broadcast "&7-=-=-=-=-=-=-=-&8[{Name}&8]&7-=-=-=-=-=-=-=-"
+              broadcast "&7-=-=-=-=-=-=-=-&8[%{Name}%&8]&7-=-=-=-=-=-=-=-"
               broadcast " "
               broadcast "&4%loop-player% &cwas kicked for:"
               broadcast "&8%{%loop-player's uuid%.bubble.cheat::*}%"
               broadcast " "
-              broadcast "&7-=-=-=-=-=-=-=-&8[{Name}&8]&7-=-=-=-=-=-=-=-"
+              broadcast "&7-=-=-=-=-=-=-=-&8[%{Name}%&8]&7-=-=-=-=-=-=-=-"
               delete {%loop-player's uuid%.bubble.warn}
               delete {%loop-player's uuid%.bubble.cheat::*}
               delete {%loop-player's uuid%.bubble}
@@ -212,22 +212,22 @@ every 5 minutes:
                   set {_display} to ""
                 execute console command "tempban %loop-player% %{Bubble.Prefix}% %{loop-player's uuid.bubble.cheat::*}% %{BanTime}%"
                 kick loop-player due to "%nl% %{Bubble.Prefix}% %nl% &8%{%loop-player's uuid%.bubble.cheat::*}%"
-                broadcast "&7-=-=-=-=-=-=-=-&8[{Name}&8]&7-=-=-=-=-=-=-=-"
+                broadcast "&7-=-=-=-=-=-=-=-&8[%{Name}%&8]&7-=-=-=-=-=-=-=-"
                 broadcast " "
                 broadcast "&4%loop-player% &cwas banned for {BanTime}&c for using:"
                 broadcast "&8%{%loop-player's uuid%.bubble.cheat::*}%"
                 broadcast " "
-                broadcast "&7-=-=-=-=-=-=-=-&8[{Name}&8]&7-=-=-=-=-=-=-=-"
+                broadcast "&7-=-=-=-=-=-=-=-&8[%{Name}%&8]&7-=-=-=-=-=-=-=-"
                 delete {%loop-player's uuid%.bubble.warn}
                 delete {%loop-player's uuid%.bubble.cheat::*}
                 delete {%loop-player's uuid%.bubble}
                 add 1 to {bubble.ban.amount}
 
 command /bubble [<text>] [<offline player>] [<text>]:
-  aliases: /bp, /bubblespeed, /bubblelag, /bubble-optimize, /bubble-Performace, /bo, /bubbleoptimize, /bubbleanticheat, /ac, /bubbleinfo, /bubble-info, /bac, /bubble, /anticheat-info, /ac-info, /anticheat, /bubblegum, /stats, /cheater, /m, /check, /view, /checks
+  aliases: /bp, /bubblespeed, /bubbleanticheat, /ac, /bubbleinfo, /bubble-info, /bac, /bubble, /anticheat-info, /ac-info, /anticheat, /bubblegum
   trigger:
     if arg-1 is "help" or "?":
-      send "&8-=-=-=-=-=&7[{Name}&7]&8=-=-=-=-=-"
+      send "&8-=-=-=-=-=&7[%{Name}%&7]&8=-=-=-=-=-"
       send "&8(1) &7/bubble bypass"
       send "&8(2) &7/bubble bypass <player>"
       send "&8(3) &7/bubble bypass clear"
@@ -238,35 +238,12 @@ command /bubble [<text>] [<offline player>] [<text>]:
       send "&8(8) &7/bubble player <player> clear"
       send "&8(9) &7/bubble theme"
       send "&8(10) &7/bubble themes"
-      send "&8-=-=-=-=-=&7[{Name}&7]&8=-=-=-=-=-"
+      send "&8-=-=-=-=-=&7[%{Name}%&7]&8=-=-=-=-=-"
       send "&8(1) &7/bubblegui"
       send "&8(1) &7/flagtoggle <cheat>"
-      send "&8-=-=-=-=-=&7[{Name}&7]&8=-=-=-=-=-"
+      send "&8-=-=-=-=-=&7[%{Name}%&7]&8=-=-=-=-=-"
     if arg-1 is not set:
-      if {bubble.warn.amount} is not set:
-        set {bubble.warn.amount} to 0
-      if {bubble.kick.amount} is not set:
-        set {bubble.kick.amount} to 0
-      if {bubble.ban.amount} is not set:
-        set {bubble.ban.amount} to 0
-      send " "
-      send "    &8-=-=-=-=-=&7[{Name}&7]&8=-=-=-=-=-"
-      send " "
-      send "            &cVersion: &7{VersionStatus} &7{Version}"
-      send "            &cStatus: &7{Stable}"
-      send "            &cDeveloper: &7Steviebeenz"
-      send "            &cGithub: &7<link:https://github.com/steviebeenz/bubbleac>Click me!<reset>"
-      send " "
-      send "    &8-=-=-=-=-=&7[{Name}&7]&8=-=-=-=-=-"
-      send " "
-      send "            &cWarns: &7%{bubble.warn.amount}%"
-      send "            &cKicks: &7%{bubble.kick.amount}%"
-      send "            &cBans: &7%{bubble.ban.amount}%"
-      send " "
-      send "           &cTotal Detections: &7%{bubble.detections}%"
-      send " "
-      send "    &8-=-=-=-=-=&7[{Name}&7]&8=-=-=-=-=-"
-      send " "
+      execute player command "/bacgui"
     if arg-1 is "player", "checks", "detects", "detect", "info", "playerinfo", "playerdetect", "userinfo", "check" or "view":
       if player has permission "{Status}":
         if arg-2 is not set:
@@ -275,7 +252,7 @@ command /bubble [<text>] [<offline player>] [<text>]:
               set {_cheatsfailed::*} to "Nothing!"
             else:
               set {_cheatsfailed::*} to {_cheatsfailed::*}
-            send "&7-=-=-=-=-=-=-=-&8[{Name}&8]&7-=-=-=-=-=-=-=-"
+            send "&7-=-=-=-=-=-=-=-&8[%{Name}%&8]&7-=-=-=-=-=-=-=-"
             send " "
             send "&8Player: &7%player%"
             send "&8UUiD: &7%player's uuid%"
@@ -283,7 +260,7 @@ command /bubble [<text>] [<offline player>] [<text>]:
             send " "
             send "&cFailed: &7%{_cheatsfailed::*}%"
             send " "
-            send "&7-=-=-=-=-=-=-=-&8[{Name}&8]&7-=-=-=-=-=-=-=-"
+            send "&7-=-=-=-=-=-=-=-&8[%{Name}%&8]&7-=-=-=-=-=-=-=-"
         if arg-2 is set:
           if arg-3 is not set:
             if {%arg-2's uuid%.bubble} is set:
@@ -291,7 +268,7 @@ command /bubble [<text>] [<offline player>] [<text>]:
                 set {_cheatsfailed::*} to "Nothing!"
               else:
                 set {_cheatsfailed::*} to {%arg-2's uuid%.bubble.cheat::*}
-              send "&7-=-=-=-=-=-=-=-&8[{Name}&8]&7-=-=-=-=-=-=-=-"
+              send "&7-=-=-=-=-=-=-=-&8[%{Name}%&8]&7-=-=-=-=-=-=-=-"
               send " "
               send "&8Player: &7%arg-2%"
               send "&8UUiD: &7%arg-2's uuid%"
@@ -299,7 +276,7 @@ command /bubble [<text>] [<offline player>] [<text>]:
               send " "
               send "&cFailed: &7%{_cheatsfailed::*}%"
               send " "
-              send "&7-=-=-=-=-=-=-=-&8[{Name}&8]&7-=-=-=-=-=-=-=-"
+              send "&7-=-=-=-=-=-=-=-&8[%{Name}%&8]&7-=-=-=-=-=-=-=-"
             else:
               send "%{Bubble.Prefix}% &cCouldn't find that player!"
           else:
@@ -315,18 +292,18 @@ command /bubble [<text>] [<offline player>] [<text>]:
         if arg-2 is not set:
           if {%player's uuid%.bubble.bypass} is not set:
             send " "
-            send "&7-=-=-=-=-=&8[{Name}&8]&7=-=-=-=-=-"
+            send "&7-=-=-=-=-=&8[%{Name}%&8]&7=-=-=-=-=-"
             send "             &7Bypass&8[&aON&8]"
-            send "&7-=-=-=-=-=&8[{Name}&8]&7=-=-=-=-=-"
+            send "&7-=-=-=-=-=&8[%{Name}%&8]&7=-=-=-=-=-"
             send " "
             add "%player%" to {bubble.bypass.list::*}
             set {%player's uuid%.bubble.bypass} to "true"
             stop
           if {%player's uuid%.bubble.bypass} is set:
             send " "
-            send "&7-=-=-=-=-=&8[{Name}&8]&7=-=-=-=-=-"
+            send "&7-=-=-=-=-=&8[%{Name}%&8]&7=-=-=-=-=-"
             send "             &7Bypass&8[&cOFF&8]"
-            send "&7-=-=-=-=-=&8[{Name}&8]&7=-=-=-=-=-"
+            send "&7-=-=-=-=-=&8[%{Name}%&8]&7=-=-=-=-=-"
             send " "
             remove "%player%" from {bubble.bypass.list::*}
             delete {%player's uuid%.bubble.bypass}
@@ -336,27 +313,27 @@ command /bubble [<text>] [<offline player>] [<text>]:
           if arg-2 is not "list" or "clear":
             if {%player's uuid%.bubble.bypass} is set:
               send " "
-              send "&7-=-=-=-=-=&8[{Name}&8]&7=-=-=-=-=-"
+              send "&7-=-=-=-=-=&8[%{Name}%&8]&7=-=-=-=-=-"
               send "             &7Bypass&8[&cOFF&8]"
-              send "&7-=-=-=-=-=&8[{Name}&8]&7=-=-=-=-=-"
+              send "&7-=-=-=-=-=&8[%{Name}%&8]&7=-=-=-=-=-"
               send " "
               remove "%arg-2%" from {bubble.bypass.list::*}
               delete {%player's uuid%.bubble.bypass}
               stop
             if {%arg-2's uuid%.bubble.bypass} is set:
               send " "
-              send "&7-=-=-=-=-=&8[{Name}&8]&7=-=-=-=-=-"
+              send "&7-=-=-=-=-=&8[%{Name}%&8]&7=-=-=-=-=-"
               send "             &7Bypass&8[&cOFF&8]"
-              send "&7-=-=-=-=-=&8[{Name}&8]&7=-=-=-=-=-"
+              send "&7-=-=-=-=-=&8[%{Name}%&8]&7=-=-=-=-=-"
               send " "
               remove "%arg-2%" from {bubble.bypass.list::*}
               delete {%arg-2's uuid%.bubble.bypass}
               stop
             else:
               send " "
-              send "&7-=-=-=-=-=&8[{Name}&8]&7=-=-=-=-=-"
+              send "&7-=-=-=-=-=&8[%{Name}%&8]&7=-=-=-=-=-"
               send "             &7Bypass&8[&aON&8]"
-              send "&7-=-=-=-=-=&8[{Name}&8]&7=-=-=-=-=-"
+              send "&7-=-=-=-=-=&8[%{Name}%&8]&7=-=-=-=-=-"
               send " "
               add "%arg-2%" to {bubble.bypass.list::*}
               set {%arg-2's uuid%.bubble.bypass} to true
@@ -387,78 +364,103 @@ command /bubble [<text>] [<offline player>] [<text>]:
           if {%player's uuid%.bubble.view.report} is not set:
             set {%player's uuid%.bubble.view.report} to true
             send " "
-            send "&7-=-=-=-=-=&8[{Name}&8]&7=-=-=-=-=-"
+            send "&7-=-=-=-=-=&8[%{Name}%&8]&7=-=-=-=-=-"
             send "         &7Notifications&8[&aON&8]"
-            send "&7-=-=-=-=-=&8[{Name}&8]&7=-=-=-=-=-"
+            send "&7-=-=-=-=-=&8[%{Name}%&8]&7=-=-=-=-=-"
             send " "
           else:
             delete {%player's uuid%.bubble.view.report}
             send " "
-            send "&7-=-=-=-=-=&8[{Name}&8]&7=-=-=-=-=-"
+            send "&7-=-=-=-=-=&8[%{Name}%&8]&7=-=-=-=-=-"
             send "         &7Notifications&8[&cOFF&8]"
-            send "&7-=-=-=-=-=&8[{Name}&8]&7=-=-=-=-=-"
+            send "&7-=-=-=-=-=&8[%{Name}%&8]&7=-=-=-=-=-"
             send " "
         else:
           if {%arg-2's uuid%.bubble.view.report} is not set:
             set {%arg-2's uuid%.bubble.view.report} to true
             send " "
-            send "&7-=-=-=-=-=&8[{Name}&8]&7=-=-=-=-=-"
+            send "&7-=-=-=-=-=&8[%{Name}%&8]&7=-=-=-=-=-"
             send "         &7Notifications&8[&aON&8]"
-            send "&7-=-=-=-=-=&8[{Name}&8]&7=-=-=-=-=-"
+            send "&7-=-=-=-=-=&8[%{Name}%&8]&7=-=-=-=-=-"
             send " "
             if arg-3 is not "-s":
               send " " to arg-2
-              send "&7-=-=-=-=-=&8[{Name}&8]&7=-=-=-=-=-" to arg-2
+              send "&7-=-=-=-=-=&8[%{Name}%&8]&7=-=-=-=-=-" to arg-2
               send "         &7Notifications&8[&aON&8]" to arg-2
-              send "&7-=-=-=-=-=&8[{Name}&8]&7=-=-=-=-=-" to arg-2
+              send "&7-=-=-=-=-=&8[%{Name}%&8]&7=-=-=-=-=-" to arg-2
               send " " to arg-2
           else:
             delete {%arg-2's uuid%.bubble.view.report}
             send " "
-            send "&7-=-=-=-=-=&8[{Name}&8]&7=-=-=-=-=-"
+            send "&7-=-=-=-=-=&8[%{Name}%&8]&7=-=-=-=-=-"
             send "         &7Notifications&8[&cOFF&8]"
-            send "&7-=-=-=-=-=&8[{Name}&8]&7=-=-=-=-=-"
+            send "&7-=-=-=-=-=&8[%{Name}%&8]&7=-=-=-=-=-"
             send " "
             if arg-3 is not "-s":
               send " " to arg-2
-              send "&7-=-=-=-=-=&8[{Name}&8]&7=-=-=-=-=-" to arg-2
+              send "&7-=-=-=-=-=&8[%{Name}%&8]&7=-=-=-=-=-" to arg-2
               send "         &7Notifications&8[&aON&8]" to arg-2
-              send "&7-=-=-=-=-=&8[{Name}&8]&7=-=-=-=-=-" to arg-2
+              send "&7-=-=-=-=-=&8[%{Name}%&8]&7=-=-=-=-=-" to arg-2
               send " " to arg-2
     if arg-1 is "theme" or "mode":
       if player has permission "{Theme}":
         if {Bubble.Theme} is "Bubble":
           set {Bubble.Theme} to "Ocean"
-          send "&1[&9{Name}&1]&b Theme is now &6Ocean&b!"
-          set {Bubble.Prefix} to "&1[&9{Name}&1]"
+          send "&1[&9%{Name}%&1]&b Theme is now &6Ocean&b!"
+          set {Bubble.Prefix} to "&1[&9%{Name}%&1]"
           stop
         if {Bubble.Theme} is "Ocean":
           set {Bubble.Theme} to "World"
-          send "&6[&a{Name}&6]&e Theme is now &6World&e!"
-          set {Bubble.Prefix} to "&6[&a{Name}&6]"
+          send "&6[&a%{Name}%&6]&e Theme is now &6World&e!"
+          set {Bubble.Prefix} to "&6[&a%{Name}%&6]"
           stop
         if {Bubble.Theme} is "World":
           set {Bubble.Theme} to "Nether"
-          send "&4[&c{Name}&4]&8 Theme is now &6Nether&8!"
-          set {Bubble.Prefix} to "&4[&c{Name}&4]"
+          send "&4[&c%{Name}%&4]&8 Theme is now &6Nether&8!"
+          set {Bubble.Prefix} to "&4[&c%{Name}%&4]"
           stop
         if {Bubble.Theme} is "Nether":
           set {Bubble.Theme} to "End"
-          send "&5[&d{Name}&5]&7 Theme is now &6End&7!"
-          set {Bubble.Prefix} to "&5[&d{Name}&5]"
+          send "&5[&d%{Name}%&5]&7 Theme is now &6End&7!"
+          set {Bubble.Prefix} to "&5[&d%{Name}%&5]"
           stop
         else:
           set {Bubble.Theme} to "Bubble"
-          send "&c[&8{Name}&c]&7 Theme is now &6Bubble&7!"
-          set {Bubble.Prefix} to "&c[&8{Name}&c]"
+          send "&c[&8%{Name}%&c]&7 Theme is now &6Bubble&7!"
+          set {Bubble.Prefix} to "&c[&8%{Name}%&c]"
           stop
     if arg-1 is "theme-list" or "themes":
       if player has permission "{Theme}":
-        send "&c[&8{Name}&c]&7 Theme is now &6Bubble&7!"
-        send "&1[&9{Name}&1]&b Theme is now &6Ocean&b!"
-        send "&6[&a{Name}&6]&e Theme is now &6World&e!"
-        send "&4[&c{Name}&4]&8 Theme is now &6Nether&8!"
-        send "&5[&d{Name}&5]&7 Theme is now &6End&7!"
+        send "&c[&8%{Name}%&c]&7 Theme is now &6Bubble&7!"
+        send "&1[&9%{Name}%&1]&b Theme is now &6Ocean&b!"
+        send "&6[&a%{Name}%&6]&e Theme is now &6World&e!"
+        send "&4[&c%{Name}%&4]&8 Theme is now &6Nether&8!"
+        send "&5[&d%{Name}%&5]&7 Theme is now &6End&7!"
+    if arg-1 is "info" or "stats":
+      if {bubble.warn.amount} is not set:
+        set {bubble.warn.amount} to 0
+      if {bubble.kick.amount} is not set:
+        set {bubble.kick.amount} to 0
+      if {bubble.ban.amount} is not set:
+        set {bubble.ban.amount} to 0
+      send " "
+      send "    &8-=-=-=-=-=&7[%{Name}%&7]&8=-=-=-=-=-"
+      send " "
+      send "            &cVersion: &7{VersionStatus} &7{Version}"
+      send "            &cStatus: &7{Stable}"
+      send "            &cDeveloper: &7Steviebeenz"
+      send "            &cGithub: &7<link:https://github.com/steviebeenz/bubbleac>Click me!<reset>"
+      send " "
+      send "    &8-=-=-=-=-=&7[%{Name}%&7]&8=-=-=-=-=-"
+      send " "
+      send "            &cWarns: &7%{bubble.warn.amount}%"
+      send "            &cKicks: &7%{bubble.kick.amount}%"
+      send "            &cBans: &7%{bubble.ban.amount}%"
+      send " "
+      send "           &cTotal Detections: &7%{bubble.detections}%"
+      send " "
+      send "    &8-=-=-=-=-=&7[%{Name}%&7]&8=-=-=-=-=-"
+      send " "
 
 on unload:
   delete {Bubble.Delay}
@@ -1441,7 +1443,7 @@ command /bacgui [<text>] [<text>] [<text>]:
       set slot 4 of player's current inventory to red stained glass pane named "&7" with lore "&7" and "&7"
       set slot 5 of player's current inventory to redstone torch named "&7Skript" with lore "&7" and "&7"
       set slot 6 of player's current inventory to red stained glass pane named "&7" with lore "&7" and "&7"
-      set slot 7 of player's current inventory to barrier named "&cComing Soon!" with lore "&7" and "&7"
+      set slot 7 of player's current inventory to barrier named "&cToggle Notifications!" with lore "&7Toggle your Notifications" and "&7"
       set slot 8 of player's current inventory to black stained glass pane named "&7" with lore "&7", "&7" and "&7"
     if arg-1 is "detections":
       if arg-2 is not set:
@@ -1606,6 +1608,11 @@ command /bacgui [<text>] [<text>] [<text>]:
           set slot 22 of player's current inventory to barrier named "&cNo Players Found!" with lore "&7" and "&7"
 
 on inventory click:
+  if clicked slot is 7:
+    if clicked item is diamond boots:
+      if name of clicked item contains "Notifications":
+        close inventory of player
+        player command "bubble notify"
   if inventory name of player's current inventory contains "%{Bubble.Prefix}%":
     if inventory name of player's current inventory contains "%{Bubble.Prefix}% &8%player%&8\&8Detections\&8":
       if inventory name of player's current inventory contains "Movement":
