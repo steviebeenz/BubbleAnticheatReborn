@@ -7,8 +7,6 @@ If you find any errors please make sure to open an issue
 
 ## **IMPORTANT // ERROR FIXES**
 
-Make sure you have read [the Download Page](https://www.spigotmc.org/resources/bubble-anticheat-reborn.79600/)
-
 ### **ERROR Fixes:**
 
 ### Error: Can't understand ban player... 
