@@ -1,6 +1,6 @@
 # Bubble Anticheat Reborn
 
-## The Anticheat That everyone Uses, Reborn for 1.8 and Later.
+## The Anticheat That Everyone Loves, Reborn for 1.8 and Later.
 
 ### Getting Started:
 
