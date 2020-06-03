@@ -15,3 +15,13 @@ First off, install Skript and SkUtilities. To get started, visit the
 
 
 <iframe width="560" height="315" src="https://www.youtube.com/embed/d2nniwxu3A4?start=4" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-123568344-4"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-123568344-4');
+</script>
