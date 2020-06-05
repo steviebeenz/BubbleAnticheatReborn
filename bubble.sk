@@ -73,8 +73,17 @@ on load:
    download file from "https://www.spigotmc.org/resources/skquery-1-9-1-15.36631/download?version=311805" to file "plugins/skquery.jar"
   download file from "https://www.spigotmc.org/resources/skript-java-addon-skellett.34361/download?version=295547" to file "plugins/skellet.jar"
   wait 120 seconds
-  execute console command "kickall Finishing Installation"
-  execute console command "restart"
+  loop all players:
+   if %loop-player% has permission "op":
+    send "&cRestarting Server In 10 seconds!" to %loop-player%
+    wait 5 seconds
+    execute console command "kickall Finishing Installation"
+   else:
+    wait 5 seconds
+    send "&cRestarting Server.." to %loop-player%
+    kick player
+    execute console command "restart"
+   
 every 8 seconds:
   if {FlightFalseFlagPrevention} is true:
     loop all players:
