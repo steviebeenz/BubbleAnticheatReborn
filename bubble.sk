@@ -50,7 +50,7 @@ on load:
  set {MaxCPS} to yaml value "Prefix" from "config"
 on load:
  if file "plugins/bubble/config.yml" exists:
-  send "Loading Config... Expect Lag" to console
+  send "Loading Config... Expect LAG. If you need a better bans plugin use https://songoda.com/marketplace/product/adminbans.314 with promo code BUBBLE10 for 10% off" to console
  else:
   download file from "https://raw.githubusercontent.com/steviebeenz/bubbleac/master/example-config.yml" to file "plugins/bubble/config.yml"
  wait 1 tick
